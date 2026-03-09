@@ -1,0 +1,126 @@
+import { DeleteOutlined, EditOutlined } from '@ant-design/icons';
+import { formatDate } from '@lib/date';
+import { Button, Table, Tag } from 'antd';
+import Link from 'next/link';
+import { PureComponent } from 'react';
+
+interface IProps {
+  dataSource: [];
+  rowKey: string;
+  loading: boolean;
+  pagination: {};
+  onChange: Function;
+  onDelete: Function;
+  currencySymbol: string;
+  currency: string;
+}
+
+export class TableListVideo extends PureComponent<IProps> {
+  render() {
+    const {
+      dataSource,
+      rowKey,
+      loading,
+      pagination,
+      onChange,
+      onDelete,
+      currencySymbol,
+      currency
+    } = this.props;
+    const columns = [
+      {
+        title: 'Title',
+        dataIndex: 'title',
+        sorter: true
+      },
+      {
+        title: 'For Sale',
+        dataIndex: 'isSale',
+        sorter: true,
+        render(isSale: boolean) {
+          switch (isSale) {
+            case true:
+              return <Tag color="green">Y</Tag>;
+            case false:
+              return <Tag color="red">N</Tag>;
+            default:
+              return null;
+          }
+        }
+      },
+      {
+        title: `Price (${currency})`,
+        dataIndex: 'price',
+        sorter: true,
+        render(price: number) {
+          return (
+            <span>
+              {currencySymbol}
+              {price}
+            </span>
+          );
+        }
+      },
+      {
+        title: 'Status',
+        dataIndex: 'status',
+        sorter: true,
+        render(status: string) {
+          switch (status) {
+            case 'active':
+              return <Tag color="green">Active</Tag>;
+            case 'inactive':
+              return <Tag color="default">Inactive</Tag>;
+            default:
+              return <Tag color="red">{status}</Tag>;
+          }
+        }
+      },
+      {
+        title: 'Last update',
+        dataIndex: 'updatedAt',
+        sorter: true,
+        render(date: Date) {
+          return <span>{formatDate(date)}</span>;
+        }
+      },
+      {
+        title: 'Actions',
+        dataIndex: '_id',
+        render: (id: string) => (
+          <>
+            <Button className="info">
+              <Link
+                href={{
+                  pathname: '/model/my-video/update',
+                  query: { id }
+                }}
+                as={`/model/my-video/update?id=${id}`}
+              >
+                <a>
+                  <EditOutlined />
+                </a>
+              </Link>
+            </Button>
+            <Button onClick={onDelete.bind(this, id)} className="danger">
+              <DeleteOutlined />
+            </Button>
+          </>
+        )
+      }
+    ];
+
+    return (
+      <div className="table-responsive">
+        <Table
+          dataSource={dataSource}
+          columns={columns}
+          rowKey={rowKey}
+          loading={loading}
+          pagination={pagination}
+          onChange={onChange.bind(this)}
+        />
+      </div>
+    );
+  }
+}

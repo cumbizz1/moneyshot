@@ -1,0 +1,41 @@
+@import '../../style/vars';
+
+.register-box {
+  max-width: 100%;
+
+  :global .register-steps {
+    span.step-box {
+      padding: 5px 11px;
+      margin-left: 30px;
+      background-color: @theme-color;
+      color: @white;
+      border-radius: 50%;
+      opacity: 0.3;
+      position: relative;
+      cursor: pointer;
+
+      &::before {
+        content: ' ';
+        position: absolute;
+        top: 14px;
+        right: 30px;
+        width: 30px;
+        background: @theme-color;
+        height: 2px;
+      }
+
+      &:first-child {
+        margin-left: 5px;
+
+        &::before {
+          display: none;
+        }
+      }
+
+      &.active {
+        opacity: 1;
+        background-color: @primary-color;
+      }
+    }
+  }
+}

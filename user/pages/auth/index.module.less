@@ -1,0 +1,395 @@
+@import '../../style/vars';
+
+.login-page {
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-attachment: inherit;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 80vh;
+}
+
+.login-box,
+.register-box {
+  max-width: 420px;
+  width: 100%;
+  margin: 30px auto;
+  color: @white;
+  background-color: rgba(0, 0, 0, .7);
+
+  &.custom {
+    background-color: transparent;
+  }
+
+  :global .login-form {
+    color: @white;
+    padding: 5px 25px 25px;
+
+    .title {
+      display: flex;
+      justify-content: center;
+      font-size: 22px;
+      font-weight: bolder;
+      margin-bottom: 15px;
+      font-family: @primary-font-bold;
+      color: @primary-color;
+      text-transform: uppercase;
+
+      @media (max-width: @mobile-screen) {
+        font-size: 18px;
+      }
+    }
+
+    .skip-btns {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+
+      .ant-btn-link-disabled,
+      .ant-btn-link.disabled,
+      .ant-btn-link[disabled],
+      .ant-btn-link-disabled:hover,
+      .ant-btn-link.disabled:hover,
+      .ant-btn-link[disabled]:hover,
+      .ant-btn-link-disabled:focus,
+      .ant-btn-link.disabled:focus,
+      .ant-btn-link[disabled]:focus,
+      .ant-btn-link-disabled:active,
+      .ant-btn-link.disabled:active,
+      .ant-btn-link[disabled]:active,
+      .ant-btn-link-disabled.active,
+      .ant-btn-link.disabled.active,
+      .ant-btn-link[disabled].active {
+        color: rgba(255, 255, 255, .3);
+      }
+    }
+
+    .ant-input {
+      border-radius: 0;
+      height: 45px;
+    }
+
+    .ant-input-password {
+      border-radius: 0;
+
+      .ant-input {
+        height: 32px;
+      }
+    }
+
+    button.login-form-button {
+      border-radius: 0;
+      min-height: 45px;
+      height: auto;
+      white-space: pre-line;
+      width: 100%;
+      font-size: 16px;
+      color: @white;
+      background-color: @primary-color;
+      margin-bottom: 15px;
+      text-transform: uppercase;
+    }
+  }
+}
+
+@media (max-width: @mobile-screen) {
+  margin: auto;
+
+  .login-box,
+  .register-box {
+    max-width: 420px;
+    width: 100%;
+    margin: 30px auto;
+    color: @white;
+    background-color: rgba(0, 0, 0, .7);
+
+    &.custom {
+      background-color: transparent;
+    }
+
+    :global .login-form {
+      color: @white;
+      padding: 5px 25px 25px;
+
+      .skip-btns {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+
+        .ant-btn-link-disabled,
+        .ant-btn-link.disabled,
+        .ant-btn-link[disabled],
+        .ant-btn-link-disabled:hover,
+        .ant-btn-link.disabled:hover,
+        .ant-btn-link[disabled]:hover,
+        .ant-btn-link-disabled:focus,
+        .ant-btn-link.disabled:focus,
+        .ant-btn-link[disabled]:focus,
+        .ant-btn-link-disabled:active,
+        .ant-btn-link.disabled:active,
+        .ant-btn-link[disabled]:active,
+        .ant-btn-link-disabled.active,
+        .ant-btn-link.disabled.active,
+        .ant-btn-link[disabled].active {
+          color: rgba(255, 255, 255, .3);
+        }
+      }
+
+      .ant-input {
+        border-radius: 0;
+        height: 45px;
+      }
+
+      .ant-input-password {
+        border-radius: 0;
+
+        .ant-input {
+          height: 32px;
+        }
+      }
+
+      button.login-form-button {
+        border-radius: 0;
+        min-height: 45px;
+        height: auto;
+        white-space: pre-line;
+        width: 100%;
+        font-size: 16px;
+        color: @white;
+        background-color: @primary-color;
+        margin-bottom: 15px;
+        text-transform: uppercase;
+      }
+    }
+  }
+}
+
+
+
+@media (max-width: @mobile-screen) {
+  font-size: 18px;
+
+  .title {
+    display: flex;
+    justify-content: center;
+    font-size: 22px;
+    font-weight: bolder;
+    margin-bottom: 15px;
+    font-family: @primary-font-bold;
+    color: @primary-color;
+    text-transform: uppercase;
+  }
+}
+
+.form {
+  position: absolute;
+  top: 45%;
+  left: 50%;
+  margin: -160px 0 0 -160px;
+  width: 320px;
+  height: 320px;
+  padding: 36px;
+  box-shadow: 0 0 100px rgba(0, 0, 0, 0.08);
+
+  button {
+    width: 100%;
+  }
+
+  p {
+    color: rgb(204, 204, 204);
+    text-align: center;
+    margin-top: 16px;
+    font-size: 12px;
+    display: flex;
+    justify-content: space-between;
+  }
+}
+
+.logo {
+  text-align: center;
+  cursor: pointer;
+  margin-bottom: 24px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  img {
+    width: 40px;
+    margin-right: 8px;
+  }
+
+  span {
+    vertical-align: text-bottom;
+    font-size: 16px;
+    text-transform: uppercase;
+    display: inline-block;
+    font-weight: 700;
+    color: @primary-color;
+    .text-gradient();
+  }
+}
+
+.ant-spin-container,
+.ant-spin-nested-loading {
+  height: 100%;
+}
+
+.error-message {
+  color: @error-color;
+}
+
+.forgot-box {
+  background-color: @black;
+  color: @white;
+  margin: 80px 30px;
+  padding: 20px;
+
+  h2,
+  h4 {
+    color: @white;
+  }
+
+  @media (max-width: @mobile-screen) {
+    .forgot-password {
+      margin: 40px auto 0;
+    }
+
+    .forgot-form {
+      .ant-form-item {
+        width: 300px;
+      }
+    }
+  }
+}
+
+.forgot-form {
+  display: flex;
+  flex-direction: column;
+  min-height: 300px;
+  padding: 70px 0;
+  align-items: center;
+  justify-content: center;
+
+  .ant-form-item {
+    margin-bottom: 10px;
+    width: 420px;
+
+    Input {
+      text-align: center;
+    }
+  }
+
+  Button {
+    width: 100%;
+    color: @black;
+  }
+}
+
+.switch-btn {
+  display: flex;
+  justify-content: center;
+
+  button {
+    background-color: transparent;
+    border: none;
+    font-size: 16px;
+    font-weight: 600;
+    padding-bottom: 10px;
+    outline: none;
+    transition: all 0.3s ease-in-out;
+    font-family: @primary-font-bold;
+    cursor: pointer;
+
+    &:hover {
+      color: @primary-color;
+    }
+
+    &.active {
+      color: @primary-color;
+      border-bottom: 2px solid;
+    }
+  }
+}
+
+.switch-grp {
+  text-align: center;
+
+  .ant-switch {
+    background-color: @primary-color;
+    padding: 0px 30px;
+    height: 40px;
+
+    .ant-switch-handle {
+      &::before {
+        border-radius: 50%;
+      }
+
+      top: 1px;
+      left: 1px;
+      width: 38px;
+      height: 38px;
+    }
+  }
+
+  .ant-switch-checked .ant-switch-handle {
+    left: calc(100% - 38px - 1px);
+  }
+}
+
+.welcome-box {
+  background-color: @light-blue;
+  margin: 3em 0;
+  padding: 3em;
+  border-radius: 10px;
+
+  h3 {
+    font-size: 1.8em;
+    font-weight: 800;
+    font-family: @primary-font-bold;
+  }
+
+  li {
+    color: #6f7479;
+    list-style: disc;
+  }
+}
+
+.email-verify-succsess {
+  width: 100%;
+  margin: auto;
+  text-align: center;
+  padding: 10px;
+}
+
+.id-block {
+  display: flex;
+  width: 100%;
+  justify-content: space-between;
+  align-items: center;
+
+  .img-id {
+    max-width: 50%;
+    width: 175px;
+  }
+}
+
+
+
+.login-logo {
+  text-align: center;
+  padding: 5px 0;
+
+  img {
+    max-width: 100%;
+    max-height: 80px;
+  }
+}
+
+.form-message {
+  :global .ant-form-item-explain {
+    text-align: center;
+    font-size: 10px;
+  }
+}

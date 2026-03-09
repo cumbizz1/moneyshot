@@ -1,0 +1,21 @@
+@import '../../../../style/vars.less';
+
+.contentInner {
+  background: @sub-background-color;
+  padding: 12px;
+  box-shadow: @shadow-1;
+  min-height: ~'calc(100vh - 230px)';
+  position: relative;
+  color: @white;
+  margin: 25px 0;
+
+  :global .ant-tabs.ant-tabs-top.nav-tabs {
+    color: @dark-grey;
+  }
+}
+
+@media (max-width: 767px) {
+  .contentInner {
+    min-height: ~'calc(100vh - 160px)';
+  }
+}
