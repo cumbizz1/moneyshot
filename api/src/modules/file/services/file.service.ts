@@ -77,6 +77,7 @@ export class FileService {
 
   public async getFtpFilePath() {
     const ftpDir = SettingService.getValueByKey(SETTING_KEYS.FTP_FOLDER_PATH) || getConfig('file').ftpFileDir;
+    if (!existsSync(ftpDir)) return [];
     const files = readdirSync(ftpDir);
     if (!files) {
       return [];
@@ -520,6 +521,7 @@ export class FileService {
             }
           }
           existsSync(videoPath) && unlinkSync(videoPath);
+          existsSync(respVideo.toPath) && unlinkSync(respVideo.toPath);
         } else {
           server = Storage.DiskStorage;
           if (generateThumbnail) {
@@ -586,6 +588,8 @@ export class FileService {
               }
             }
           }
+
+          existsSync(videoPath) && unlinkSync(videoPath);
         } else {
           newAbsolutePath = join(`${toPath}/`, fileName);
           newPath = newAbsolutePath.replace(publicDir, '');

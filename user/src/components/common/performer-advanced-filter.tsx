@@ -71,6 +71,8 @@ export class PerformerAdvancedFilter extends PureComponent<IProps> {
           </div>
         </div>
         <div className={!showMore ? 'filter-block hide' : 'filter-block'}>
+          {countries.length > 0
+          && (
           <div className="filter-item">
             <Select
               onChange={(val) => this.setState({ country: val }, () => this.handleSubmit())}
@@ -92,15 +94,15 @@ export class PerformerAdvancedFilter extends PureComponent<IProps> {
               ))}
             </Select>
           </div>
+          )}
+          {genders.length > 0
+          && (
           <div className="filter-item">
             <Select
               onChange={(val) => this.setState({ gender: val }, () => this.handleSubmit())}
               style={{ width: '100%' }}
               defaultValue=""
             >
-              <Select.Option key="all" value="">
-                All genders
-              </Select.Option>
               {genders.map((gen) => (
                 <Select.Option key={gen.value} value={gen.value}>
                   {gen.text}
@@ -108,15 +110,15 @@ export class PerformerAdvancedFilter extends PureComponent<IProps> {
               ))}
             </Select>
           </div>
+          )}
+          {sexualOrientations.length > 0
+          && (
           <div className="filter-item">
             <Select
               onChange={(val) => this.setState({ sexualOrientation: val }, () => this.handleSubmit())}
               style={{ width: '100%' }}
               defaultValue=""
             >
-              <Select.Option key="all" value="">
-                All sexual orientations
-              </Select.Option>
               {sexualOrientations.map((gen) => (
                 <Select.Option key={gen.value} value={gen.value}>
                   {gen.text}
@@ -124,6 +126,9 @@ export class PerformerAdvancedFilter extends PureComponent<IProps> {
               ))}
             </Select>
           </div>
+          )}
+          {ages.length > 0
+          && (
           <div className="filter-item">
             <Select
               onChange={(val) => this.setState({ age: val }, () => this.handleSubmit())}
@@ -131,9 +136,6 @@ export class PerformerAdvancedFilter extends PureComponent<IProps> {
               placeholder="Ages"
               defaultValue=""
             >
-              <Select.Option key="all" value="">
-                All ages
-              </Select.Option>
               {ages.map((i) => (
                 <Select.Option key={i.value} value={i.value}>
                   {i.text}
@@ -141,6 +143,9 @@ export class PerformerAdvancedFilter extends PureComponent<IProps> {
               ))}
             </Select>
           </div>
+          )}
+          {eyes.length > 0
+          && (
           <div className="filter-item">
             <Select
               onChange={(val) => this.setState({ eyes: val }, () => this.handleSubmit())}
@@ -148,9 +153,6 @@ export class PerformerAdvancedFilter extends PureComponent<IProps> {
               placeholder="Eyes color"
               defaultValue=""
             >
-              <Select.Option key="all" value="">
-                All eye colors
-              </Select.Option>
               {eyes.map((i) => (
                 <Select.Option key={i.value} value={i.value}>
                   {i.text}
@@ -158,6 +160,9 @@ export class PerformerAdvancedFilter extends PureComponent<IProps> {
               ))}
             </Select>
           </div>
+          )}
+          {hairs.length > 0
+          && (
           <div className="filter-item">
             <Select
               onChange={(val) => this.setState({ hair: val }, () => this.handleSubmit())}
@@ -165,9 +170,6 @@ export class PerformerAdvancedFilter extends PureComponent<IProps> {
               placeholder="Hair color"
               defaultValue=""
             >
-              <Select.Option key="all" value="">
-                All hair colors
-              </Select.Option>
               {hairs.map((i) => (
                 <Select.Option key={i.value} value={i.value}>
                   {i.text}
@@ -175,6 +177,9 @@ export class PerformerAdvancedFilter extends PureComponent<IProps> {
               ))}
             </Select>
           </div>
+          )}
+          {pubicHairs.length > 0
+          && (
           <div className="filter-item">
             <Select
               onChange={(val) => this.setState({ pubicHair: val }, () => this.handleSubmit())}
@@ -182,9 +187,6 @@ export class PerformerAdvancedFilter extends PureComponent<IProps> {
               placeholder="Pubic hair"
               defaultValue=""
             >
-              <Select.Option key="all" value="">
-                All pubic hairs
-              </Select.Option>
               {pubicHairs.map((i) => (
                 <Select.Option key={i.value} value={i.value}>
                   {i.text}
@@ -192,6 +194,9 @@ export class PerformerAdvancedFilter extends PureComponent<IProps> {
               ))}
             </Select>
           </div>
+          )}
+          {butts.length > 0
+          && (
           <div className="filter-item">
             <Select
               onChange={(val) => this.setState({ bust: val }, () => this.handleSubmit())}
@@ -199,9 +204,6 @@ export class PerformerAdvancedFilter extends PureComponent<IProps> {
               placeholder="Select butt size"
               defaultValue=""
             >
-              <Select.Option key="all" value="">
-                All butt sizes
-              </Select.Option>
               {butts.map((i) => (
                 <Select.Option key={i.value} value={i.value}>
                   {i.text}
@@ -209,6 +211,7 @@ export class PerformerAdvancedFilter extends PureComponent<IProps> {
               ))}
             </Select>
           </div>
+          )}
           {heights.length > 0 && (
           <div className="filter-item">
             <Select
@@ -217,11 +220,8 @@ export class PerformerAdvancedFilter extends PureComponent<IProps> {
               placeholder="Select height"
               defaultValue=""
             >
-              <Select.Option key="all" value="">
-                All heights
-              </Select.Option>
               {heights.map((i) => (
-                <Select.Option key={i.text} value={i.text}>
+                <Select.Option key={i.value} value={i.value}>
                   {i.text}
                 </Select.Option>
               ))}
@@ -236,17 +236,16 @@ export class PerformerAdvancedFilter extends PureComponent<IProps> {
               placeholder="Select weight"
               defaultValue=""
             >
-              <Select.Option key="all" value="">
-                All weights
-              </Select.Option>
               {weights.map((i) => (
-                <Select.Option key={i.text} value={i.text}>
+                <Select.Option key={i.value} value={i.value}>
                   {i.text}
                 </Select.Option>
               ))}
             </Select>
           </div>
           )}
+          {ethnicities.length > 0
+          && (
           <div className="filter-item">
             <Select
               onChange={(val) => this.setState({ ethnicity: val }, () => this.handleSubmit())}
@@ -254,9 +253,6 @@ export class PerformerAdvancedFilter extends PureComponent<IProps> {
               placeholder="Select ethnicity"
               defaultValue=""
             >
-              <Select.Option key="all" value="">
-                All ethnicities
-              </Select.Option>
               {ethnicities.map((i) => (
                 <Select.Option key={i.value} value={i.value}>
                   {i.text}
@@ -264,6 +260,9 @@ export class PerformerAdvancedFilter extends PureComponent<IProps> {
               ))}
             </Select>
           </div>
+          )}
+          {bodyTypes.length > 0
+          && (
           <div className="filter-item">
             <Select
               onChange={(val) => this.setState({ bodyType: val }, () => this.handleSubmit())}
@@ -271,9 +270,6 @@ export class PerformerAdvancedFilter extends PureComponent<IProps> {
               placeholder="Select body type"
               defaultValue=""
             >
-              <Select.Option key="all" value="">
-                All body types
-              </Select.Option>
               {bodyTypes.map((i) => (
                 <Select.Option key={i.value} value={i.value}>
                   {i.text}
@@ -281,6 +277,7 @@ export class PerformerAdvancedFilter extends PureComponent<IProps> {
               ))}
             </Select>
           </div>
+          )}
         </div>
       </div>
     );

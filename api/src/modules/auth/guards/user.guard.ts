@@ -16,14 +16,18 @@ export class LoadUser implements CanActivate {
     const token = request.headers.authorization || request?.query?.authorization || request?.query?.Authorization;
     if (!token || token === 'null') return true;
 
-    const user = request.user
-      || (await this.authService.getSourceFromJWT(token));
-    if (!user || user.status !== STATUS.ACTIVE) {
-      return false;
+    try {
+      const user = request.user
+        || (await this.authService.getSourceFromJWT(token));
+      if (!user || user.status !== STATUS.ACTIVE) {
+        return false;
+      }
+      if (!request.user) request.user = user;
+      const decodded = await this.authService.verifyJWT(token);
+      request.authUser = request.authUser || decodded;
+      return true;
+    } catch {
+      return true;
     }
-    if (!request.user) request.user = user;
-    const decodded = await this.authService.verifyJWT(token);
-    request.authUser = request.authUser || decodded;
-    return true;
   }
 }

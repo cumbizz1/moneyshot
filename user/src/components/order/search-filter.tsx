@@ -50,10 +50,6 @@ const productType = [
     text: 'Digital Product'
   },
   {
-    key: 'physical',
-    text: 'Physical Product'
-  },
-  {
     key: 'video',
     text: 'Video'
   }

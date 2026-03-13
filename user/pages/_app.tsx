@@ -142,7 +142,7 @@ class Application extends App<IApp> {
     if (authenticate) await auth(ctx, store, noredirect);
     else if (token) {
       // load user if needed
-      loadUser(token, store);
+      await loadUser(token, store);
     }
 
     // Wait for all page actions to dispatch

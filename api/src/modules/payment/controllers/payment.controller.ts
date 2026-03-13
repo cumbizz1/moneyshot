@@ -49,7 +49,7 @@ export class PaymentController {
     // eslint-disable-next-line no-param-reassign
     payload.videoId = videoId;
     const order = await this.orderService.createFromVOD(payload, user);
-    const info = await this.paymentService.purchaseVOD(order, payload.paymentGateway || 'ccbill', payload.method);
+    const info = await this.paymentService.purchaseVOD(order);
     return DataResponse.ok(info);
   }
 
@@ -63,7 +63,7 @@ export class PaymentController {
   ): Promise<DataResponse<any>> {
     // to purchase product, create new order then do the payment
     const order = await this.orderService.createFromProducts(payload, user);
-    const info = await this.paymentService.purchaseProducts(order, payload.paymentGateway || 'ccbill', payload.method);
+    const info = await this.paymentService.purchaseProducts(order);
     return DataResponse.ok(info);
   }
 
@@ -86,8 +86,8 @@ export class PaymentController {
       return DataResponse.ok(order);
     }
     const info = subscriptionPackage.type === 'single'
-      ? await this.paymentService.processSinglePayment(data, payload.paymentGateway || 'ccbill', payload.method)
-      : await this.paymentService.processSubscriptionPayment(data, payload.paymentGateway || 'ccbill', payload.method);
+      ? await this.paymentService.processSinglePayment(data)
+      : await this.paymentService.processSubscriptionPayment(data);
     return DataResponse.ok(info);
   }
 }

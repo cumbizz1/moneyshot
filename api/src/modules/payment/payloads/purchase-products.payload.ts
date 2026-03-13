@@ -5,32 +5,24 @@ import {
 export class PurchaseProductsPayload {
   @IsNotEmpty()
   @IsArray()
-  products: [{
+    products: [{
     quantity: number,
     _id: string
   }];
 
   @IsOptional()
   @IsString()
-  couponCode: string;
+    couponCode: string;
 
   @IsOptional()
   @IsString()
-  deliveryAddress: string;
+    deliveryAddress: string;
 
   @IsOptional()
   @IsString()
-  phoneNumber: string;
+    phoneNumber: string;
 
   @IsOptional()
   @IsString()
-  postalCode: string;
-
-  @IsOptional()
-  @IsString()
-  paymentGateway = 'ccbill';
-
-  @IsOptional()
-  @IsString()
-  method: string;
+    postalCode: string;
 }

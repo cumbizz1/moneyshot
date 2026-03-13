@@ -64,7 +64,7 @@ export class StockProductListener {
     const digitalLink = await this.fileService.generateDownloadLink(product.digitalFileId);
     const user = await this.userService.findById(orderDetail.buyerId);
 
-    await this.mailService.send({
+    user.email && await this.mailService.send({
       subject: `Order #${orderDetail.orderNumber} - Digital file to download`,
       to: user.email,
       data: {
@@ -73,7 +73,7 @@ export class StockProductListener {
         digitalLink,
         totalPrice: (orderDetail.totalPrice || 0).toFixed(2)
       },
-      template: 'send-user-digital-product.html'
+      template: 'send-user-digital-product'
     });
   }
 }

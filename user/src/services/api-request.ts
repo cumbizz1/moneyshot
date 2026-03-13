@@ -1,7 +1,6 @@
 import { isUrl } from '@lib/string';
-import fetch from 'isomorphic-unfetch';
+import axios from 'axios';
 import cookie from 'js-cookie';
-import Router from 'next/router';
 
 import { getGlobalConfig } from './config';
 
@@ -19,46 +18,6 @@ export abstract class APIRequest {
     APIRequest.token = token;
   }
 
-  /**
-   * Parses the JSON returned by a network request
-   *
-   * @param  {object} response A response from a network request
-   *
-   * @return {object}          The parsed JSON from the request
-   */
-  private parseJSON(response: Response) {
-    if (response.status === 204 || response.status === 205) {
-      return null;
-    }
-    return response.json();
-  }
-
-  /**
-   * Checks if a network request came back fine, and throws an error if not
-   *
-   * @param  {object} response   A response from a network request
-   *
-   * @return {object|undefined} Returns either the response, or throws an error
-   */
-  private checkStatus(response: Response) {
-    if (response.status >= 200 && response.status < 300) {
-      return response;
-    }
-
-    if (response.status === 401) {
-      if (process.browser) {
-        Router.push('/login');
-      }
-
-      throw new Error('Forbidden in the action!');
-    }
-
-    // const error = new Error(response.statusText) as any;
-    // error.response = response;
-    // throw error;
-    throw response.clone().json();
-  }
-
   request(
     url: string,
     method?: string,
@@ -73,13 +32,25 @@ export abstract class APIRequest {
       ...headers || {}
     };
     const config = getGlobalConfig();
-    return fetch(isUrl(url) ? url : `${config.API_ENDPOINT || config.NEXT_PUBLIC_API_ENDPOINT}${url}`, {
+    return axios({
       method: verb,
-      headers: updatedHeader,
-      body: body ? JSON.stringify(body) : null
+      url: isUrl(url) ? url : `${config.API_ENDPOINT || config.NEXT_PUBLIC_API_ENDPOINT}${url}`,
+      data: body ? JSON.stringify(body) : undefined,
+      headers: updatedHeader
     })
-      .then(this.checkStatus)
-      .then(this.parseJSON);
+      .then((resp) => resp.data)
+      .catch((e) => {
+        const { response } = e;
+        if (response.status === 401) {
+          if (typeof window !== 'undefined') {
+            window.location.href = '/login';
+          }
+
+          throw new Error('Forbidden in the action!');
+        }
+
+        throw response.data;
+      });
   }
 
   buildUrl(baseUrl: string, params?: { [key: string]: any }) {

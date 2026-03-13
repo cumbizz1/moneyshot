@@ -1,4 +1,3 @@
-import PaymentMethodSelect from '@components/payment/payment-method-select';
 import { PackageGridCard } from '@components/subscription/grid-card';
 import { getResponseError } from '@lib/utils';
 import { paymentService, subscriptionService } from '@services/index';
@@ -29,9 +28,7 @@ class UpgradeMemberShipPlan extends PureComponent<IProps> {
     packages: [],
     step: 1,
     currentSubscription: false as any,
-    blockUpgrade: false,
-    showModal: false,
-    selectedPackage: null
+    blockUpgrade: false
   };
 
   componentDidMount() {
@@ -48,35 +45,10 @@ class UpgradeMemberShipPlan extends PureComponent<IProps> {
     this.loadCurrentSubscription();
   }
 
-  onPaymentSelect(data) {
-    this.processUpgrade(data);
-  }
-
-  handleUpgrade(data: ISubscriptionPackage) {
-    this.setState({
-      selectedPackage: data,
-      showModal: true
-    });
-  }
-
-  onCancel() {
-    this.setState({
-      step: 1,
-      submiting: false,
-      selectedPackage: null,
-      showModal: false
-    });
-  }
-
-  async processUpgrade(data) {
+  async handleUpgrade(data: ISubscriptionPackage) {
     try {
-      const { selectedPackage } = this.state;
       await this.setState({ submiting: true, step: 2 });
-      const resp = await paymentService.subscribe({
-        packageId: selectedPackage._id,
-        ...data,
-        method: data.curoMethod
-      });
+      const resp = await paymentService.subscribe({ packageId: data._id });
       if (resp.data && resp.data.paymentUrl) {
         window.location.href = resp.data.paymentUrl;
       }
@@ -119,8 +91,7 @@ class UpgradeMemberShipPlan extends PureComponent<IProps> {
   render() {
     const { ui } = this.props;
     const {
-      packages, fetching, step, submiting, activePackageId, currentSubscription, blockUpgrade,
-      showModal
+      packages, fetching, step, submiting, activePackageId, currentSubscription, blockUpgrade
     } = this.state;
 
     return (
@@ -150,23 +121,23 @@ class UpgradeMemberShipPlan extends PureComponent<IProps> {
               </Tooltip>
             </Divider>
             {blockUpgrade && (
-              <Row>
-                <Col span={24}>
-                  {!currentSubscription?.subscriptionId
-                    ? (
-                      <p>
-                        You have cancelled your subscription from auto-renewing. Your current subscription will expire on
-                        {moment(currentSubscription.expiredAt).format('LL')}
-                      </p>
-                    )
-                    : (
-                      <p>
-                        Your current subscription will expire on
-                        {moment(currentSubscription.expiredAt).format('LL')}
-                      </p>
-                    )}
-                </Col>
-              </Row>
+            <Row>
+              <Col span={24}>
+                {!currentSubscription?.subscriptionId
+                  ? (
+                    <p>
+                      You have cancelled your subscription from auto-renewing. Your current subscription will expire on
+                      {moment(currentSubscription.expiredAt).format('LL')}
+                    </p>
+                  )
+                  : (
+                    <p>
+                      Your current subscription will expire on
+                      {moment(currentSubscription.expiredAt).format('LL')}
+                    </p>
+                  )}
+              </Col>
+            </Row>
             )}
             {!blockUpgrade && !fetching && step === 1 && (
               <div className="packages-li">
@@ -209,11 +180,6 @@ class UpgradeMemberShipPlan extends PureComponent<IProps> {
             )}
           </div>
         </div>
-        <PaymentMethodSelect
-          onSelect={this.onPaymentSelect.bind(this)}
-          onCancel={this.onCancel.bind(this)}
-          showModal={showModal}
-        />
       </Layout>
     );
   }

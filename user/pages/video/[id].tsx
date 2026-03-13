@@ -6,7 +6,6 @@ import {
 } from '@ant-design/icons';
 import { CommentForm, ListComments } from '@components/comment';
 import Loader from '@components/common/base/loader';
-import CuroMethodSelect from '@components/payment/curo-method-select';
 import PhotoPreviewList from '@components/photo/photo-preview-list';
 import { SubscriptionPackage } from '@components/subscription/line-card';
 import {
@@ -15,19 +14,21 @@ import {
 import { PurchaseVideoForm } from '@components/video/confirm-purchase';
 import { VideoCard } from '@components/video/video-card';
 import { formatDate, shortenLargeNumber, videoDuration } from '@lib/index';
+import { redirect404 } from '@lib/utils';
 import {
   paymentService, photoService,
   reactionService, subscriptionService, videoService
 } from '@services/index';
 import {
   Alert, Avatar, Button, Col,
-  Input, Layout, List, message, Modal, Radio, Row, Space,
+  Input, Layout, List, message, Modal, Row, Space,
   Spin, Tabs, Tag
 } from 'antd';
 import moment from 'moment';
 import Error from 'next/error';
 import Head from 'next/head';
 import Link from 'next/link';
+import nextCookie from 'next-cookies';
 import { PureComponent } from 'react';
 import { connect } from 'react-redux';
 import {
@@ -58,8 +59,6 @@ interface IProps {
   video: IVideo;
   deleteComment: Function;
   updateBalance: Function;
-  curoEnabled: boolean;
-  ccbillEnabled: boolean;
 }
 
 const initialState = {
@@ -79,53 +78,35 @@ const initialState = {
   requesting: false,
   couponCode: '',
   isApplyCoupon: false,
-  coupon: null as ICoupon,
-  paymentGateway: '',
-  membershipPlans: [],
-  curoMethod: 'creditcard'
+  coupon: null as ICoupon
 };
 
-export async function getServerSideProps(context) {
-  try {
-    const { query } = context;
-    const token = context.req.cookies?.token;
-    const headers = {} as any;
-    if (token) headers.Authorization = token;
-    const video = (await (
-      await videoService.findOne(query.id, headers)
-    ).data);
-    return {
-      props: {
-        video
-      }
-    };
-  } catch (e) {
-    return {
-      props: {
-        error: await e
-      }
-    };
-  }
-}
-
-class VideoViewPage extends PureComponent<IProps, typeof initialState> {
+class VideoViewPage extends PureComponent<IProps> {
   static authenticate: boolean = true;
 
   static noredirect = true;
 
-  constructor(props) {
-    super(props);
-
-    const { ccbillEnabled, curoEnabled } = props;
-    let paymentGateway = '';
-    if (ccbillEnabled) paymentGateway = 'ccbill';
-    else if (curoEnabled) paymentGateway = 'curo';
-    this.state = {
-      ...initialState,
-      membershipPlans: [],
-      paymentGateway
-    };
+  static async getInitialProps(ctx) {
+    try {
+      const { token } = nextCookie(ctx);
+      const { query } = ctx;
+      const headers = {} as any;
+      if (token) headers.Authorization = token;
+      const video = (await (
+        await videoService.findOne(query.id, headers)
+      ).data);
+      return {
+        video
+      };
+    } catch {
+      return redirect404(ctx);
+    }
   }
+
+  state = {
+    ...initialState,
+    membershipPlans: []
+  };
 
   componentDidMount() {
     const { video, getRelated: handleGetRelated } = this.props;
@@ -156,8 +137,6 @@ class VideoViewPage extends PureComponent<IProps, typeof initialState> {
     const { video } = this.props;
     this.setState({
       ...initialState,
-      paymentGateway: this.state.paymentGateway,
-      curoMethod: this.state.curoMethod,
       videoStats: video?.stats,
       isLiked: video?.isLiked,
       isFavourited: video?.isFavourited,
@@ -300,14 +279,10 @@ class VideoViewPage extends PureComponent<IProps, typeof initialState> {
 
   async purchaseVideo() {
     const { video } = this.props;
-    const { coupon, paymentGateway, curoMethod } = this.state;
+    const { coupon } = this.state;
     try {
       await this.setState({ submiting: true });
-      const resp = await (await paymentService.purchaseVideo(video._id, {
-        couponCode: coupon?.code || '',
-        paymentGateway,
-        method: curoMethod
-      })).data;
+      const resp = await (await paymentService.purchaseVideo(video._id, { couponCode: coupon?.code || '' })).data;
       message.info('Redirecting to payment gateway, do not reload page at this time', 15);
       window.location.href = resp.paymentUrl;
     } catch (e) {
@@ -340,11 +315,8 @@ class VideoViewPage extends PureComponent<IProps, typeof initialState> {
         items: []
       },
       commentMapping,
-      comment,
-      curoEnabled,
-      ccbillEnabled
+      comment
     } = this.props;
-    const { paymentGateway, curoMethod } = this.state;
     if (error) {
       return <Error statusCode={error?.statusCode || 404} title={error?.message || 'Video was not found'} />;
     }
@@ -444,7 +416,7 @@ class VideoViewPage extends PureComponent<IProps, typeof initialState> {
             </span>
           </div>
           <div className="vid-player">
-            {!user?.hasFreeVideoAccess && (((video?.isSale && !video?.isBought) || (!video?.isSale && !user?.isSubscribed))) && (
+            {(((video?.isSale && !video?.isBought) || (!video?.isSale && !user.isSubscribed))) && (
               <div className={style['main-player']}>
                 <div className="vid-group">
                   <div className="left-group">
@@ -496,29 +468,7 @@ class VideoViewPage extends PureComponent<IProps, typeof initialState> {
                     <div className="right-group">
                       <h3 className="title">UNLOCK TO VIEW</h3>
                       <div className="member-plans custom">
-                        <Radio.Group onChange={(e) => this.setState({ paymentGateway: e.target.value })} value={paymentGateway}>
-                          {ccbillEnabled && (
-                            <Radio value="ccbill">
-                              <img alt="CCBill" src="/ccbill-ico.png" style={{ width: '50px', height: 'auto' }} />
-                            </Radio>
-                          )}
-                          {curoEnabled && (
-                            <Radio value="curo">
-                              <img alt="CURO" src="/curo-icon.jpg" style={{ width: '50px', height: 'auto' }} />
-                            </Radio>
-                          )}
-                        </Radio.Group>
-
-                        {paymentGateway === 'curo' && (
-                          <>
-                            <hr />
-                            <CuroMethodSelect
-                              method={curoMethod}
-                              onChange={(method) => this.setState({ curoMethod: method })}
-                            />
-                          </>
-                        )}
-
+                        <img alt="CCbill" src="/ccbill-ico.png" />
                         <Input
                           style={{ margin: '5px 0' }}
                           placeholder="Enter a coupon code"
@@ -562,7 +512,7 @@ class VideoViewPage extends PureComponent<IProps, typeof initialState> {
                           <Button
                             className="primary"
                             onClick={() => this.purchaseVideo()}
-                            disabled={submiting || requesting || (!ccbillEnabled && !curoEnabled)}
+                            disabled={submiting || requesting}
                             loading={submiting}
                           >
                             <strong>CHECK OUT</strong>
@@ -574,7 +524,7 @@ class VideoViewPage extends PureComponent<IProps, typeof initialState> {
                 </div>
               </div>
             )}
-            {(user?.hasFreeVideoAccess || (!video.isSale && user?.isSubscribed) || (video.isSale && video.isBought)) && (
+            {((!video.isSale && user.isSubscribed) || (video.isSale && video.isBought)) && (
               <div className="vid-group custom">
                 {lockUpcomingView && (
                   <>
@@ -696,7 +646,7 @@ class VideoViewPage extends PureComponent<IProps, typeof initialState> {
               <TabPane tab="Description" key="description">
                 <p style={{ whiteSpace: 'pre-line' }}>{video.description || 'No description'}</p>
               </TabPane>
-              {/* <TabPane tab="Performers" key="participants">
+              <TabPane tab="Performers" key="participants">
                 <List
                   itemLayout="horizontal"
                   dataSource={video?.performers || []}
@@ -726,7 +676,7 @@ class VideoViewPage extends PureComponent<IProps, typeof initialState> {
                 {photos && photos.length > 0 && <PhotoPreviewList isBlur={!user || !user._id || !user.isSubscribed} photos={photos} />}
                 {fetching && <div className="text-center"><Spin /></div>}
                 {!fetching && !photos.length && <div className="text-center">No photo was found</div>}
-              </TabPane> */}
+              </TabPane>
               <TabPane
                 tab="Comments"
                 key="comment"
@@ -799,9 +749,7 @@ const mapStates = (state: any) => {
     commentMapping,
     comment,
     user: { ...state.user.current },
-    ui: { ...state.ui },
-    ccbillEnabled: state.settings.ccbillEnable,
-    curoEnabled: state.settings.curoEnabled
+    ui: { ...state.ui }
   };
 };
 

@@ -1,74 +1,88 @@
-import { ApiProperty } from '@nestjs/swagger';
-import { IsOptional, IsString } from 'class-validator';
+import {
+  IsISO31661Alpha2, IsMongoId, IsOptional, IsString, ValidateIf
+} from 'class-validator';
 import { SearchRequest } from 'src/kernel/common';
 
 export class PerformerSearchRequest extends SearchRequest {
-  @ApiProperty()
   @IsString()
   @IsOptional()
-    name: string;
+  name: string;
 
-  @ApiProperty()
   @IsString()
   @IsOptional()
-    q: string;
+  q: string;
 
-  @ApiProperty()
   @IsString()
   @IsOptional()
-    age: string;
+  age: string;
 
-  @ApiProperty()
   @IsString()
   @IsOptional()
-    fromAge: Date;
+  fromAge: Date;
 
-  @ApiProperty()
   @IsString()
   @IsOptional()
-    toAge: Date;
+  toAge: Date;
 
-  @ApiProperty()
   @IsString()
   @IsOptional()
-    gender: string;
+  gender: string;
 
-  @ApiProperty()
   @IsString()
   @IsOptional()
-    status: string;
+  status: string;
 
-  @ApiProperty()
+  @IsOptional()
+  @IsString()
+  @IsISO31661Alpha2()
+  @ValidateIf((o) => !!o.country)
+  country: string;
+
   @IsString()
   @IsOptional()
-    country: string;
+  @IsMongoId()
+  @ValidateIf((o) => !!o.categoryId)
+  categoryId: string;
 
-  @ApiProperty()
+  @IsOptional()
+  categoryIds: string[];
+
+  @IsOptional()
+  includedIds: string[];
+
+  @IsOptional()
   @IsString()
+  hair: string;
+
   @IsOptional()
-    categoryId: string;
+  @IsString()
+  pubicHair: string;
 
-  @ApiProperty()
   @IsOptional()
-    categoryIds: string[];
+  @IsString()
+  ethnicity: string;
 
-  @ApiProperty()
   @IsOptional()
-    includedIds: string[];
+  @IsString()
+  bodyType: string;
 
-  constructor(options?: Partial<PerformerSearchRequest>) {
-    super(options);
+  @IsOptional()
+  @IsString()
+  height: string;
 
-    this.name = options?.name;
-    this.q = options?.q;
-    this.age = options?.age;
-    this.fromAge = options?.fromAge;
-    this.toAge = options?.toAge;
-    this.gender = options?.gender;
-    this.status = options?.status;
-    this.country = options?.country;
-    this.categoryId = options?.categoryId;
-    this.categoryIds = options?.categoryIds;
-    this.includedIds = options?.includedIds;
-  }
+  @IsOptional()
+  @IsString()
+  weight: string;
+
+  @IsOptional()
+  @IsString()
+  eyes: string;
+
+  @IsOptional()
+  @IsString()
+  butt: string;
+
+  @IsOptional()
+  @IsString()
+  sexualOrientation: string;
 }

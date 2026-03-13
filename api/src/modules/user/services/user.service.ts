@@ -83,21 +83,6 @@ export class UserService {
     return users.map((u) => new UserDto(u));
   }
 
-  public async updateFreeVideoAccess(userId: string | ObjectId, hasAccess: boolean): Promise<UserModel> {
-    return this.userModel.findByIdAndUpdate(
-      userId,
-      { hasFreeVideoAccess: hasAccess, updatedAt: new Date() },
-      { new: true }
-    );
-  }
-
-  public async bulkUpdateFreeVideoAccess(userIds: string[], hasAccess: boolean): Promise<void> {
-    await this.userModel.updateMany(
-      { _id: { $in: userIds } },
-      { hasFreeVideoAccess: hasAccess, updatedAt: new Date() }
-    );
-  }
-
   public async create(
     data: UserCreatePayload | UserAuthCreatePayload,
     options = {} as any

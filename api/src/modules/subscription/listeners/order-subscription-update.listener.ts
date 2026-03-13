@@ -41,8 +41,11 @@ export class OrderSubscriptionListener {
       if (![PAYMENT_TYPE.SUBSCRIPTION_PACKAGE].includes(order.type) && ![PAYMENT_TYPE.SUBSCRIPTION_PACKAGE].includes(orderDetails.type)) {
         return;
       }
-
-      await this.handleSubscription(order, orderDetails, transaction);
+      // not support for other gateway
+      if (transaction.paymentGateway !== 'ccbill') {
+        return;
+      }
+      await this.handleCCBillSubscription(order, orderDetails, transaction);
     } catch (e) {
       // TODO - log me
       // eslint-disable-next-line no-console
@@ -50,7 +53,7 @@ export class OrderSubscriptionListener {
     }
   }
 
-  private async handleSubscription(order: OrderModel, orderDetails: OrderDetailsModel, transaction: PaymentTransactionModel) {
+  private async handleCCBillSubscription(order: OrderModel, orderDetails: OrderDetailsModel, transaction: PaymentTransactionModel) {
     const existSubscription = await this.subscriptionModel.findOne({
       userId: order.buyerId
     });
@@ -70,8 +73,7 @@ export class OrderSubscriptionListener {
       return false;
     }
     const subscriptionType = orderDetails[0]?.extraInfo?.recurring ? 'recurring' : 'single';
-    const subscriptionId = transaction?.paymentResponseInfo?.subscription || transaction?.paymentResponseInfo?.subscriptionId
-    || transaction?.paymentResponseInfo?.subscription_id || null;
+    const subscriptionId = transaction?.paymentResponseInfo?.subscriptionId || transaction?.paymentResponseInfo?.subscription_id || null;
     const paymentResponseInfo = transaction?.paymentResponseInfo || {} as any;
     const { paymentGateway } = transaction;
     const startRecurringDate = paymentResponseInfo.renewalDate || paymentResponseInfo.timestamp;

@@ -6,19 +6,19 @@
   "scripts": {
     "dev": "next dev -p 8081",
     "build": "next build",
-    "start": "next start -p 9081",
+    "start": "next start -p 8081",
     "lint": "eslint '{pages,src,server}/**/*.ts' --fix && eslint '{pages,src,server}/**/*.tsx' --fix"
   },
   "dependencies": {
     "@reduxjs/toolkit": "^1.8.2",
     "antd": "^4.21.4",
     "antd-img-crop": "^4.2.3",
+    "axios": "^1.7.7",
     "classnames": "^2.3.1",
     "dotenv": "^16.0.1",
     "emoji-mart": "^5.1.0",
     "enquire-js": "^0.2.1",
     "express": "^4.18.1",
-    "isomorphic-unfetch": "^3.1.0",
     "js-cookie": "^3.0.1",
     "lodash": "^4.17.21",
     "moment": "^2.29.3",

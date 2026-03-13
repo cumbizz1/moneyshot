@@ -5,6 +5,7 @@ import {
 import { ScrollListGallery } from '@components/gallery/scroll-list-item';
 import { PerformerInfo } from '@components/performer';
 import { ScrollListVideo } from '@components/video';
+import { redirect404 } from '@lib/utils';
 import { getGalleries, moreGalleries } from '@redux/gallery/actions';
 import {
   getVideos, moreVideo
@@ -15,6 +16,7 @@ import {
 } from 'antd';
 import Error from 'next/error';
 import Head from 'next/head';
+import nextCookie from 'next-cookies';
 import { PureComponent } from 'react';
 import { connect } from 'react-redux';
 import {
@@ -40,36 +42,29 @@ interface IProps {
 
 const { TabPane } = Tabs;
 
-export async function getServerSideProps(ctx) {
-  try {
-    const { query } = ctx;
-    const token = ctx.req.cookies?.token;
-    const [performer, countries] = await Promise.all([
-      performerService.findOne(query.id, {
-        Authorization: token || ''
-      }),
-      utilsService.countriesList()
-    ]);
-    return {
-      props: {
-        performer: performer?.data,
-        countries: countries?.data || []
-      }
-    };
-  } catch (e) {
-    const error = await Promise.resolve(e);
-    return {
-      props: {
-        error
-      }
-    };
-  }
-}
-
 class PerformerProfile extends PureComponent<IProps> {
   static authenticate = true;
 
   static noredirect = true;
+
+  static async getInitialProps(ctx) {
+    try {
+      const { token } = nextCookie(ctx);
+      const { query } = ctx;
+      const [performer, countries] = await Promise.all([
+        performerService.findOne(query.id, {
+          Authorization: token || ''
+        }),
+        utilsService.countriesList()
+      ]);
+      return {
+        performer: performer?.data,
+        countries: countries?.data || []
+      };
+    } catch {
+      return redirect404(ctx);
+    }
+  }
 
   state = {
     itemPerPage: 24,

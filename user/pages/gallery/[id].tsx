@@ -7,6 +7,7 @@ import {
 import GalleryCard from '@components/gallery/gallery-card';
 import PhotoPreviewList from '@components/photo/photo-preview-list';
 import { formatDate, shortenLargeNumber } from '@lib/index';
+import { redirect404 } from '@lib/utils';
 import { getRelatedGalleries } from '@redux/gallery/actions';
 import { galleryService, photoService, reactionService } from '@services/index';
 import {
@@ -16,6 +17,7 @@ import {
 import Error from 'next/error';
 import Head from 'next/head';
 import Link from 'next/link';
+import nextCookie from 'next-cookies';
 import { PureComponent } from 'react';
 import { connect } from 'react-redux';
 import {
@@ -44,33 +46,27 @@ const initialState = {
   totalFavourites: 0
 };
 
-export async function getServerSideProps(ctx) {
-  try {
-    const { query } = ctx;
-    const token = ctx.req.cookies?.token;
-    const gallery = (await (
-      await galleryService.findById(query.id, {
-        Authorization: token || ''
-      })
-    ).data);
-    return {
-      props: {
-        gallery
-      }
-    };
-  } catch (e) {
-    return {
-      props: {
-        error: await e
-      }
-    };
-  }
-}
-
 class GalleryViewPage extends PureComponent<IProps> {
   static authenticate = true;
 
   static noredirect = true;
+
+  static async getInitialProps(ctx) {
+    try {
+      const { token } = nextCookie(ctx);
+      const { query } = ctx;
+      const gallery = (await (
+        await galleryService.findById(query.id, {
+          Authorization: token || ''
+        })
+      ).data);
+      return {
+        gallery
+      };
+    } catch {
+      return redirect404(ctx);
+    }
+  }
 
   state = { ...initialState };
 

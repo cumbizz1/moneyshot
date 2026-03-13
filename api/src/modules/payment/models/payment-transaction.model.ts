@@ -35,8 +35,6 @@ export class PaymentTransactionModel extends Document {
 
   status: string;
 
-  extraInfo: any;
-
   createdAt?: Date;
 
   updatedAt?: Date;

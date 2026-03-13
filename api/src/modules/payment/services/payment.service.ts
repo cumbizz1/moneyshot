@@ -23,7 +23,6 @@ import {
 import { OrderModel, PaymentTransactionModel } from '../models';
 import { PAYMENT_TRANSACTION_MODEL_PROVIDER } from '../providers';
 import { CCBillService } from './ccbill.service';
-import { CuroService } from './curo.service';
 import { OrderService } from './order.service';
 
 @Injectable()
@@ -34,34 +33,14 @@ export class PaymentService {
     private readonly ccbillService: CCBillService,
     private readonly queueEventService: QueueEventService,
     private readonly subscriptionService: SubscriptionService,
-    private readonly orderService: OrderService,
-    private readonly curoService: CuroService
+    private readonly orderService: OrderService
   ) { }
 
   public async findById(id: string | ObjectId) {
     return this.paymentTransactionModel.findById(id);
   }
 
-  public async purchaseProducts(order: OrderModel, paymentGateway = 'ccbill', method = 'creditcard') {
-    if (paymentGateway === 'curo') {
-      const orderDetails = await this.orderService.findOrderDetailsByQuery({ orderId: order._id });
-      const transaction = await this.paymentTransactionModel.create({
-        paymentGateway,
-        orderId: order._id,
-        source: order.buyerSource,
-        sourceId: order.buyerId,
-        type: PAYMENT_TYPE.PRODUCT,
-        totalPrice: order.totalPrice,
-        status: PAYMENT_STATUS.PENDING,
-        products: []
-      });
-      return this.curoService.singlePayment(
-        transaction,
-        orderDetails,
-        method
-      );
-    }
-
+  public async purchaseProducts(order: OrderModel, paymentGateway = 'ccbill') {
     const {
       enabled,
       flexformId,
@@ -89,26 +68,7 @@ export class PaymentService {
     });
   }
 
-  public async purchaseVOD(order: OrderModel, paymentGateway = 'ccbill', method = 'creditcard') {
-    if (paymentGateway === 'curo') {
-      const orderDetails = await this.orderService.findOrderDetailsByQuery({ orderId: order._id });
-      const transaction = await this.paymentTransactionModel.create({
-        paymentGateway,
-        orderId: order._id,
-        source: order.buyerSource,
-        sourceId: order.buyerId,
-        type: PAYMENT_TYPE.SALE_VIDEO,
-        totalPrice: order.totalPrice,
-        status: PAYMENT_STATUS.PENDING,
-        products: []
-      });
-      return this.curoService.singlePayment(
-        transaction,
-        orderDetails,
-        method
-      );
-    }
-
+  public async purchaseVOD(order: OrderModel, paymentGateway = 'ccbill') {
     const {
       enabled,
       flexformId,
@@ -136,28 +96,7 @@ export class PaymentService {
     });
   }
 
-  public async processSinglePayment(data, paymentGateway = 'ccbill', method = 'creditcard') {
-    const { order, subscriptionPackage } = data;
-
-    if (paymentGateway === 'curo') {
-      const orderDetails = await this.orderService.findOrderDetailsByQuery({ orderId: order._id });
-      const transaction = await this.paymentTransactionModel.create({
-        paymentGateway,
-        orderId: order._id,
-        source: order.buyerSource,
-        sourceId: order.buyerId,
-        type: PAYMENT_TYPE.SUBSCRIPTION_PACKAGE,
-        totalPrice: order.totalPrice,
-        status: PAYMENT_STATUS.PENDING,
-        products: []
-      });
-      return this.curoService.singlePayment(
-        transaction,
-        orderDetails,
-        method
-      );
-    }
-
+  public async processSinglePayment(data, paymentGateway = 'ccbill') {
     const {
       enabled,
       flexformId,
@@ -165,7 +104,7 @@ export class PaymentService {
       singleSalt
     } = await this.ccbillService.getConfig();
     if (!enabled) throw new HttpException('CCBill is not enabled', 422);
-
+    const { order, subscriptionPackage } = data;
     const transaction = await this.paymentTransactionModel.create({
       paymentGateway,
       orderId: order._id,
@@ -186,28 +125,7 @@ export class PaymentService {
     });
   }
 
-  public async processSubscriptionPayment(data, paymentGateway = 'ccbill', method = 'creditcard') {
-    if (paymentGateway === 'curo') {
-      const { order, subscriptionPackage } = data;
-      const orderDetails = await this.orderService.findOrderDetailsByQuery({ orderId: order._id });
-      const transaction = await this.paymentTransactionModel.create({
-        paymentGateway,
-        orderId: order._id,
-        source: order.buyerSource,
-        sourceId: order.buyerId,
-        type: PAYMENT_TYPE.SUBSCRIPTION_PACKAGE,
-        totalPrice: order.totalPrice,
-        status: PAYMENT_STATUS.PENDING, // pending
-        products: []
-      });
-      return this.curoService.recurringPayment(
-        transaction,
-        orderDetails,
-        subscriptionPackage.recurringPeriod,
-        method
-      );
-    }
-
+  public async processSubscriptionPayment(data, paymentGateway = 'ccbill') {
     const {
       enabled,
       flexformId,
@@ -363,88 +281,5 @@ export class PaymentService {
         data: transaction
       })
     );
-  }
-
-  public async curoPaymentWebhook(payload) {
-    const {
-      code,
-      transaction,
-      reference,
-      subscription = null,
-      status = null,
-      amount
-    } = payload;
-    if (!code || !transaction || !reference) return false;
-    // https://www.curopayments.com/docs/api/?rest_Callback
-    const isSuccess = this.curoService.isTransactionSuccess(code);
-    if (!isSuccess) return false;
-    // TODO - check hash key and verify?
-    const details = await this.curoService.detailsTransaction(transaction);
-    if (!details.success) return false;
-    if (!this.curoService.isTransactionSuccess(details.transaction.code)) return false;
-    // subscription check
-    // check renewal?
-    // Status of the subscription. This can be any of the following values: reactivate, suspend, cancel, deactivate
-    if (subscription && ['reactivate'].includes(status) && this.curoService.isTransactionSuccess(code)) {
-      const dbTransaction = await this.paymentTransactionModel.findById(
-        reference
-      );
-      if (!dbTransaction || dbTransaction.status !== PAYMENT_STATUS.PENDING) {
-        return { ok: false };
-      }
-
-      if (dbTransaction.status === PAYMENT_STATUS.PENDING) {
-        dbTransaction.status = PAYMENT_STATUS.SUCCESS;
-        dbTransaction.paymentResponseInfo = payload;
-        dbTransaction.updatedAt = new Date();
-        await dbTransaction.save();
-        await this.queueEventService.publish(
-          new QueueEvent({
-            channel: TRANSACTION_SUCCESS_CHANNEL,
-            eventName: EVENT.CREATED,
-            data: dbTransaction
-          })
-        );
-        return { ok: true };
-      }
-
-      const dbSubscription = await this.subscriptionService.findBySubscriptionId(
-        subscription
-      );
-      if (!dbSubscription) {
-        return { ok: false };
-      }
-
-      // create user order and transaction for this order
-      const price = amount ? parseFloat(amount) / 100 : dbTransaction.totalPrice;
-      const { userId } = subscription;
-      const order = await this.orderService.createForSubscriptionRenewal({
-        userId,
-        price,
-        type: PAYMENT_TYPE.SUBSCRIPTION_PACKAGE
-      });
-      await this.handlePaymentSuccess(order, payload);
-      return { ok: true };
-    }
-
-    // normal
-    const dbTransaction = await this.paymentTransactionModel.findById(
-      reference
-    );
-    if (!dbTransaction || dbTransaction.status !== PAYMENT_STATUS.PENDING) {
-      return { ok: false };
-    }
-    dbTransaction.status = PAYMENT_STATUS.SUCCESS;
-    dbTransaction.paymentResponseInfo = payload;
-    dbTransaction.updatedAt = new Date();
-    await dbTransaction.save();
-    await this.queueEventService.publish(
-      new QueueEvent({
-        channel: TRANSACTION_SUCCESS_CHANNEL,
-        eventName: EVENT.CREATED,
-        data: dbTransaction
-      })
-    );
-    return { ok: true };
   }
 }

@@ -241,7 +241,6 @@ class Settings extends PureComponent {
               <Menu.Item key="email">Email</Menu.Item>
               <Menu.Item key="custom">SEO</Menu.Item>
               <Menu.Item key="ccbill">CCbill</Menu.Item>
-              <Menu.Item key="curo">CURO</Menu.Item>
               <Menu.Item key="currency">Currency</Menu.Item>
               <Menu.Item key="smtp">SMTP</Menu.Item>
               <Menu.Item key="s3">S3</Menu.Item>

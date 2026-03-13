@@ -46,14 +46,6 @@ export class VideoService extends APIRequest {
   delete(id: string) {
     return this.del(`/admin/assets/videos/${id}`);
   }
-
-  searchUsersViewFreeVideo(query: any) {
-    return this.get('/admin/free-video-access/search', query);
-  }
-
-  updateFreeVideoAccess(userId: string, data: { hasFreeVideoAccess: boolean }) {
-    return this.put(`/admin/free-video-access/${userId}`, data);
-  }
 }
 
 export const videoService = new VideoService();

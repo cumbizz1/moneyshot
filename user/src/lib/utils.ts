@@ -1,6 +1,7 @@
 import {
   cloneDeep
 } from 'lodash';
+import Router from 'next/router';
 import * as pathToRegexp from 'path-to-regexp';
 
 /**
@@ -87,4 +88,18 @@ export function getResponseError(data: any) {
 
   // TODO - parse for langauge or others
   return typeof data.message === 'string' ? data.message : 'Bad request!';
+}
+
+export function redirect404(ctx = null) {
+  if (typeof window !== 'undefined') {
+    Router.push('/404');
+    return {};
+  }
+
+  if (!ctx) return {};
+
+  ctx.res.writeHead && ctx.res.writeHead(302, { Location: '/404' });
+  ctx.res.end && ctx.res.end();
+  // getInitialProps should not return undefined
+  return {};
 }

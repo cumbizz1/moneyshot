@@ -5,7 +5,7 @@ import {
 } from 'src/kernel';
 import { isObjectId } from 'src/kernel/helpers/string.helper';
 import { MissingConfigPaymentException } from 'src/modules/payment/exceptions';
-import { CCBillService, CuroService } from 'src/modules/payment/services';
+import { CCBillService } from 'src/modules/payment/services';
 import { SETTING_KEYS } from 'src/modules/settings/constants';
 import { SettingService } from 'src/modules/settings/services';
 
@@ -21,8 +21,7 @@ export class CancelSubscriptionService {
     @Inject(SUBSCRIPTION_MODEL_PROVIDER)
     private readonly subscriptionModel: Model<SubscriptionModel>,
     private readonly settingService: SettingService,
-    private readonly ccbillService: CCBillService,
-    private readonly curoService: CuroService
+    private readonly ccbillService: CCBillService
   ) {
   }
 
@@ -40,27 +39,26 @@ export class CancelSubscriptionService {
       return { success: true };
     }
 
-    if (subscription.paymentGateway === 'curo') {
-      await this.curoService.cancelSubscription(subscription.subscriptionId);
-    } else if (subscription.paymentGateway === 'ccbill') {
-      const [ccbillClientAccNo, ccbillDatalinkUsername, ccbillDatalinkPassword] = await Promise.all([
-        this.settingService.getKeyValue(SETTING_KEYS.CCBILL_CLIENT_ACCOUNT_NUMBER),
-        this.settingService.getKeyValue(SETTING_KEYS.CCBILL_DATALINK_USERNAME),
-        this.settingService.getKeyValue(SETTING_KEYS.CCBILL_DATALINK_PASSWORD)
-      ]);
-      if (!ccbillClientAccNo || !ccbillDatalinkUsername || !ccbillDatalinkPassword) {
-        throw new MissingConfigPaymentException();
-      }
-
-      const status = await this.ccbillService.cancelSubscription({
-        subscriptionId: subscription.subscriptionId,
-        ccbillClientAccNo,
-        ccbillDatalinkUsername,
-        ccbillDatalinkPassword
-      });
-      if (!status) throw new HttpException(`Cannot cancel subscription ${subscription.subscriptionId}`, 403);
+    if (subscription.paymentGateway !== 'ccbill') {
+      throw new HttpException('Only support to cancel subscription CCbill', 422);
     }
 
+    const [ccbillClientAccNo, ccbillDatalinkUsername, ccbillDatalinkPassword] = await Promise.all([
+      this.settingService.getKeyValue(SETTING_KEYS.CCBILL_CLIENT_ACCOUNT_NUMBER),
+      this.settingService.getKeyValue(SETTING_KEYS.CCBILL_DATALINK_USERNAME),
+      this.settingService.getKeyValue(SETTING_KEYS.CCBILL_DATALINK_PASSWORD)
+    ]);
+    if (!ccbillClientAccNo || !ccbillDatalinkUsername || !ccbillDatalinkPassword) {
+      throw new MissingConfigPaymentException();
+    }
+
+    const status = await this.ccbillService.cancelSubscription({
+      subscriptionId: subscription.subscriptionId,
+      ccbillClientAccNo,
+      ccbillDatalinkUsername,
+      ccbillDatalinkPassword
+    });
+    if (!status) throw new HttpException(`Cannot cancel subscription ${subscription.subscriptionId}`, 403);
     subscription.status = SUBSCRIPTION_STATUS.DEACTIVATED;
     subscription.updatedAt = new Date();
     await subscription.save();

@@ -1,7 +1,6 @@
 import {
   Body,
   Controller,
-  Get,
   HttpCode,
   HttpStatus,
   Injectable,
@@ -19,7 +18,7 @@ import { PaymentService } from '../services/payment.service';
 export class PaymentWebhookController {
   constructor(
     private readonly paymentService: PaymentService
-  ) { }
+  ) {}
 
   @Post('/ccbill/callhook')
   @HttpCode(HttpStatus.OK)
@@ -54,35 +53,6 @@ export class PaymentWebhookController {
         );
         break;
     }
-    return DataResponse.ok(info);
-  }
-
-
-  @Post('/curo/callhook')
-  @HttpCode(HttpStatus.OK)
-  @UsePipes(new ValidationPipe({ transform: true }))
-  async curoPostCallhook(
-    @Body() payload: Record<string, string>,
-    @Query() query: Record<string, string>
-  ): Promise<DataResponse<any>> {
-    const body = {
-      ...query,
-      ...payload
-    };
-    const info = await this.paymentService.curoPaymentWebhook(body);
-    return DataResponse.ok(info);
-  }
-
-  @Get('/curo/callhook')
-  @HttpCode(HttpStatus.OK)
-  @UsePipes(new ValidationPipe({ transform: true }))
-  async curoGetCallhook(
-    @Query() query: Record<string, string>
-  ): Promise<DataResponse<any>> {
-    const body = {
-      ...query
-    };
-    const info = await this.paymentService.curoPaymentWebhook(body);
     return DataResponse.ok(info);
   }
 }

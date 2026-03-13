@@ -242,7 +242,7 @@ export class PhotoService {
   }
 
   public async deleteByGallery(galleryId: string | ObjectId) {
-    const photos = await this.photoModel.find({ tagetId: galleryId });
+    const photos = await this.photoModel.find({ targetId: galleryId });
     if (photos && photos.length > 0) {
       await Promise.all(
         photos.map((photo) => {

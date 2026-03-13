@@ -1,7 +1,9 @@
 import { ObjectId } from 'mongodb';
 import { getConfig } from 'src/kernel';
 import { isUrl } from 'src/kernel/helpers/string.helper';
-import { S3ObjectCannelACL, Storage } from 'src/modules/storage/contants';
+import { SettingService } from 'src/modules/settings';
+import { SETTING_KEYS } from 'src/modules/settings/constants';
+import { Storage } from 'src/modules/storage/contants';
 import { S3Service } from 'src/modules/storage/services';
 
 import { FileModel } from '../models';
@@ -98,15 +100,14 @@ export class FileDto {
     }
 
     if (isUrl(this.path) && this.server === Storage.S3) {
-      if (this.acl === S3ObjectCannelACL.PublicRead) {
+      if (!authenticated) {
         return this.path;
       }
 
-      if (!authenticated || !this.metadata) {
-        return this.path;
-      }
-
-      const { bucket, expires, endpoint } = this.metadata;
+      let { bucket, expires, endpoint } = this.metadata || {};
+      if (!bucket) bucket = SettingService.getValueByKey(SETTING_KEYS.AWS_S3_BUCKET_NAME);
+      if (!endpoint) endpoint = SettingService.getValueByKey(SETTING_KEYS.AWS_S3_BUCKET_ENDPOINT);
+      if (!expires) expires = 1200;
       return S3Service.getSignedUrl(
         {
           Bucket: bucket,

@@ -1,4 +1,3 @@
-import * as https from 'https';
 import {
   forwardRef,
   MiddlewareConsumer,
@@ -25,22 +24,11 @@ import {
   CCBillService,
   CheckPaymentService,
   OrderService,
-  PaymentService,
-  CuroService
+  PaymentService
 } from './services';
-import { HttpModule } from '@nestjs/axios';
-
-const agent = new https.Agent({
-  rejectUnauthorized: false
-});
 
 @Module({
   imports: [
-    HttpModule.register({
-      timeout: 10000,
-      maxRedirects: 5,
-      httpsAgent: agent
-    }),
     MongoDBModule,
     QueueModule.forRoot(),
     // inject user module because we request guard from auth, need to check and fix dependencies if not needed later
@@ -60,8 +48,7 @@ const agent = new https.Agent({
     CCBillService,
     CheckPaymentService,
     OrderService,
-    OrderListener,
-    CuroService
+    OrderListener
   ],
   controllers: [PaymentController, OrderController, PaymentWebhookController],
   exports: [
@@ -70,8 +57,7 @@ const agent = new https.Agent({
     PaymentService,
     CCBillService,
     CheckPaymentService,
-    OrderService,
-    CuroService
+    OrderService
   ]
 })
 export class PaymentModule implements NestModule {

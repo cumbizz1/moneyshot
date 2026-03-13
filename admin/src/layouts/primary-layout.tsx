@@ -218,23 +218,6 @@ class PrimaryLayout extends PureComponent<DefaultProps> {
         ]
       },
       {
-        id: 'free-video-access',
-        name: 'Free Access Video',
-        icon: <VideoCameraOutlined />,
-        children: [
-          {
-            id: 'free-video-access-listing',
-            name: 'Users free access video',
-            route: '/free-access-video'
-          },
-          {
-            id: 'free-video-access-create',
-            name: 'New user free access video',
-            route: '/free-access-video/create'
-          }
-        ]
-      },
-      {
         id: 'videos',
         name: 'Existing videos',
         icon: <VideoCameraOutlined />,

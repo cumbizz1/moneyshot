@@ -70,8 +70,8 @@ export class RegisterController {
       }
 
       const info = subscriptionPackage.type === 'single'
-        ? await this.paymentService.processSinglePayment(data, req.paymentGateway || 'ccbill', req.method)
-        : await this.paymentService.processSubscriptionPayment(data, req.paymentGateway || 'ccbill', req.method);
+        ? await this.paymentService.processSinglePayment(data)
+        : await this.paymentService.processSubscriptionPayment(data);
 
       return DataResponse.ok({
         ...info,

@@ -422,22 +422,15 @@ export class VideoService {
     dto.isLiked = !!reactions.filter((r) => r.action === REACTION.LIKE).length;
     dto.isFavourited = !!reactions.filter((r) => r.action === REACTION.FAVOURITE).length;
     dto.isWatchedLater = !!reactions.filter((r) => r.action === REACTION.WATCH_LATER).length;
-
-    // Check if user has free video access
-    if (currentUser.hasFreeVideoAccess) {
-      dto.isBought = true;
-    } else if (dto.isSale) {
+    if (dto.isSale) {
       const bought = currentUser && await this.checkPaymentService.checkBoughtVideo(dto, currentUser);
       dto.isBought = !!bought;
     } else {
-      // check subscription
+      // check subscription?
       const isSubscribed = currentUser && await this.subscriptionService.checkSubscribed(currentUser._id);
       dto.isBought = !!isSubscribed;
     }
-    const canView = currentUser.hasFreeVideoAccess
-                  || (!dto.isSale && dto.isBought)
-                  || (dto.isSale && dto.isBought)
-                  || currentUser?.roles.includes('admin');
+    const canView = (!dto.isSale && dto.isBought) || (dto.isSale && dto.isBought) || currentUser?.roles.includes('admin');
     dto.thumbnail = {
       url: (thumbnailFile && thumbnailFile.getUrl()) || null,
       thumbnails: (thumbnailFile && thumbnailFile.getThumbnails()) || []
@@ -739,10 +732,6 @@ export class VideoService {
       throw new ForbiddenException();
     }
     if (user.roles && user.roles.indexOf('admin') > -1) {
-      return true;
-    }
-    // check free video access
-    if (user.hasFreeVideoAccess) {
       return true;
     }
     // check type video

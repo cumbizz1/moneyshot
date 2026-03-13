@@ -1,7 +1,7 @@
 import './cart.module.less';
 
 import { ShoppingCartOutlined } from '@ant-design/icons';
-import CheckOutForm from '@components/cart/form-checkout';
+import { CheckOutForm } from '@components/cart/form-checkout';
 import { TableCart } from '@components/cart/table-cart';
 import { Layout, message, Spin } from 'antd';
 import Head from 'next/head';
@@ -122,12 +122,9 @@ class CartPage extends PureComponent<IProps> {
     phoneNumber: string;
     postalCode: string;
     couponCode: string;
-    curoMethod: string;
-    paymentGateway: string;
   }) {
     const {
-      deliveryAddress, phoneNumber, postalCode, couponCode,
-      paymentGateway, curoMethod
+      deliveryAddress, phoneNumber, postalCode, couponCode
     } = payload;
     try {
       const { products: prods } = this.state;
@@ -141,9 +138,7 @@ class CartPage extends PureComponent<IProps> {
         couponCode: couponCode || '',
         phoneNumber,
         postalCode,
-        deliveryAddress,
-        paymentGateway,
-        method: curoMethod
+        deliveryAddress
       };
       const resp = await (await paymentService.purchaseProducts(data)).data;
       message.info(

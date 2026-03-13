@@ -19,7 +19,6 @@ export interface IUserResponse {
   isOnline?: boolean;
   isSubscribed?: boolean;
   memberShipExpiredAt?: Date;
-  hasFreeVideoAccess?: boolean;
   createdAt?: Date;
   updatedAt?: Date;
 }
@@ -59,8 +58,6 @@ export class UserDto {
 
   memberShipExpiredAt?: Date;
 
-  hasFreeVideoAccess?: boolean;
-
   createdAt?: Date;
 
   updatedAt?: Date;
@@ -87,7 +84,6 @@ export class UserDto {
           'isOnline',
           'isSubscribed',
           'memberShipExpiredAt',
-          'hasFreeVideoAccess',
           'createdAt',
           'updatedAt'
         ])
@@ -107,8 +103,7 @@ export class UserDto {
       username: this.username,
       firstName: this.firstName,
       lastName: this.lastName,
-      isOnline: this.isOnline,
-      hasFreeVideoAccess: this.hasFreeVideoAccess
+      isOnline: this.isOnline
     };
 
     const privateInfo = {
@@ -121,7 +116,6 @@ export class UserDto {
       verifiedEmail: this.verifiedEmail,
       isSubscribed: this.isSubscribed,
       memberShipExpiredAt: this.memberShipExpiredAt,
-      hasFreeVideoAccess: this.hasFreeVideoAccess,
       createdAt: this.createdAt,
       updatedAt: this.updatedAt
     };

@@ -51,20 +51,7 @@ export const SETTING_KEYS = {
   AWS_S3_ACCESS_KEY_ID: 's3AccessKeyId',
   AWS_S3_SECRET_ACCESS_KEY: 's3SecretAccessKey',
   AWS_S3_BUCKET_ENDPOINT: 's3BucketEnpoint',
-  AWS_S3_BUCKET_NAME: 's3BucketName',
-
-
-  // curo payment
-  CURO_API_ENDPOINT: 'curoApiEndpoint',
-  CURO_MERCHANT: 'curoMerchant',
-  CURO_API_KEY: 'curoApiKey',
-  CURO_SITE_ID: 'curoSiteId',
-  CURO_CURRENCY_CODE: 'curoCurrencyCode',
-  CURO_SUCCESS_URL: 'curoSuccessUrl',
-  CURO_PENDING_URL: 'curoPendingUrl',
-  CURO_FAILURE_URL: 'curoFailureUrl',
-  CURO_CALLBACK_URL: 'curoCallbackUrl',
-  CURO_ENABLED: 'curoEnabled'
+  AWS_S3_BUCKET_NAME: 's3BucketName'
 };
 
 export const MENU_SECTION = {

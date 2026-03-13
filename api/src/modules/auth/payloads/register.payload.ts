@@ -15,56 +15,48 @@ export class UserRegisterPayload {
   @ApiProperty()
   @IsString()
   @IsOptional()
-  name: string;
+    name: string;
 
   @ApiProperty()
   @IsString()
   @IsOptional()
-  firstName: string;
+    firstName: string;
 
   @ApiProperty()
   @IsString()
   @IsOptional()
-  lastName: string;
+    lastName: string;
 
   @ApiProperty()
   @IsString()
   @IsEmail()
   @IsNotEmpty()
-  email: string;
+    email: string;
 
   @ApiProperty()
   @IsString()
   @MinLength(6)
-  password: string;
+    password: string;
 
   @ApiProperty()
   @IsString()
   @Validate(Username)
   @IsNotEmpty()
-  username: string;
+    username: string;
 
   @ApiProperty()
   @IsString()
   @IsOptional()
   @IsIn(GENDERS)
-  gender: string;
+    gender: string;
 
   @ApiProperty()
   @IsString()
   @IsOptional()
-  country: string;
+    country: string;
 
   @ApiProperty()
   @IsString()
   @IsOptional()
-  subscriptionPackageId: string;
-
-  @IsString()
-  @IsOptional()
-  paymentGateway: string;
-
-  @IsString()
-  @IsOptional()
-  method: string;
+    subscriptionPackageId: string;
 }

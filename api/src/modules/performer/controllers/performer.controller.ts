@@ -35,11 +35,10 @@ export class PerformerController {
 
   @Get('/search')
   @HttpCode(HttpStatus.OK)
-  @UsePipes(new ValidationPipe({ transform: true }))
+  @UsePipes(new ValidationPipe({ whitelist: true, transform: true }))
   async usearch(
-    @Query() req: PerformerSearchRequest
+    @Query() query: PerformerSearchRequest
   ): Promise<DataResponse<PageableData<IPerformerResponse>>> {
-    const query = new PerformerSearchRequest(req);
     const data = await this.performerSearchService.search(query);
     return DataResponse.ok(data);
   }

@@ -119,7 +119,7 @@ export function UserAccountForm({
               </Select.Option>
             </Select>
           </Form.Item>
-          {/* <Form.Item label="Avatar" required>
+          <Form.Item label="Avatar" required>
             <AvatarUpload
               image={user.avatar}
               uploadUrl={options.avatarUrl}
@@ -127,7 +127,7 @@ export function UserAccountForm({
               onUploaded={options.uploadAvatar}
             />
             <div className="ant-form-item-explain" style={{ textAlign: 'left' }}><div role="alert">Avatar is at 5Mb or below</div></div>
-          </Form.Item> */}
+          </Form.Item>
         </Col>
       </Row>
       <Form.Item wrapperCol={{ ...layout.wrapperCol, offset: 4 }}>

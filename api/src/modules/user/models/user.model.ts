@@ -39,6 +39,4 @@ export class UserModel extends Document {
   updatedAt: Date;
 
   verifiedEmail: boolean;
-
-  hasFreeVideoAccess: boolean;
 }

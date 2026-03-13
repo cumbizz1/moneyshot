@@ -12,7 +12,6 @@ export interface IUser {
   isOnline?: boolean;
   isSubscribed?: boolean;
   memberShipExpiredAt?: Date;
-  hasFreeVideoAccess?: boolean;
 }
 
 export interface IUserFormData {

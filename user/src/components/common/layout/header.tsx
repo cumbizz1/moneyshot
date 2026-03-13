@@ -2,7 +2,7 @@ import {
   ClockCircleOutlined, CrownOutlined, HeartOutlined,
   HistoryOutlined, HomeOutlined,
   LoginOutlined,
-  LogoutOutlined, SearchOutlined, ShopOutlined, ShoppingCartOutlined, StarOutlined, UserOutlined, VideoCameraOutlined
+  LogoutOutlined, PictureOutlined, SearchOutlined, ShopOutlined, ShoppingCartOutlined, StarOutlined, UserOutlined, VideoCameraOutlined
 } from '@ant-design/icons';
 import { formatDate } from '@lib/date';
 import { logout } from '@redux/auth/actions';
@@ -122,14 +122,14 @@ class Header extends PureComponent<IProps> {
                     </a>
                   </li>
                 </Link>
-                {/* <Link href="/gallery">
+                <Link href="/gallery">
                   <li className={router.pathname === '/gallery' ? 'active' : ''}>
                     <a>
                       <PictureOutlined />
-                      <span className="hide">Categories</span>
+                      <span className="hide">Galleries</span>
                     </a>
                   </li>
-                </Link> */}
+                </Link>
                 <Link href="/store">
                   <li className={router.pathname === '/store' ? 'active' : ''}>
                     <a>

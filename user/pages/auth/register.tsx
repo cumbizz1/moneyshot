@@ -1,6 +1,5 @@
 /* eslint-disable no-nested-ternary */
 import { RegisterForm } from '@components/auth/register-form';
-import PaymentMethodSelect from '@components/payment/payment-method-select';
 import { PackageGridCard } from '@components/subscription/grid-card';
 import storeHolder from '@lib/storeHolder';
 import { getResponseError } from '@lib/utils';
@@ -32,8 +31,6 @@ interface IProps {
     slug: string;
   };
   packageId: string;
-  curoEnabled: boolean;
-  ccbillEnabled: boolean;
 }
 
 class FanRegister extends PureComponent<IProps> {
@@ -50,13 +47,18 @@ class FanRegister extends PureComponent<IProps> {
     if (!settings.acceptanceSignupId) {
       return { ...query };
     }
-    const accepsingup = await postService.findById(settings.acceptanceSignupId);
+    let accepsingup = {} as any;
+    try {
+      accepsingup = await postService.findById(settings.acceptanceSignupId);
+    // eslint-disable-next-line no-empty
+    } catch {}
+
     return {
       acceptanceSignup: {
         // content: resp.data?.content,
-        title: accepsingup.data?.title,
+        title: accepsingup?.data?.title,
         // image: resp.data?.image,
-        slug: accepsingup.data?.slug
+        slug: accepsingup?.data?.slug
       },
       ...query
     };
@@ -67,9 +69,7 @@ class FanRegister extends PureComponent<IProps> {
     submiting: false,
     packages: [],
     selectedPackage: null,
-    step: 1,
-    showModal: false,
-    dataSubmit: {}
+    step: 1
   };
 
   componentDidMount() {
@@ -82,44 +82,15 @@ class FanRegister extends PureComponent<IProps> {
     isNext && step < 3 && this.setState({ step: step + 1 });
   };
 
-  onCancel() {
-    this.setState({
-      step: 1,
-      submiting: false,
-      selectedPackage: null,
-      showModal: false
-    });
-  }
-
-  onPaymentSelect(data) {
-    const { dataSubmit } = this.state;
-    this.processRegister({
-      ...dataSubmit,
-      paymentGateway: data.paymentGateway,
-      method: data.curoMethod
-    });
-  }
-
-  handleRegister(data: any) {
-    const { ccbillEnabled, curoEnabled } = this.props;
-    if (ccbillEnabled || curoEnabled) {
-      this.setState({
-        showModal: true,
-        dataSubmit: data
-      });
-    } else {
-      this.processRegister(data);
+  async handleRegister(data: any) {
+    const { selectedPackage } = this.state;
+    const payload = { ...data };
+    if (selectedPackage) {
+      payload.subscriptionPackageId = selectedPackage._id;
     }
-  }
-
-  async processRegister(payload = {} as any) {
     try {
-      const { selectedPackage } = this.state;
       await this.setState({ submiting: true });
-      const resp = await authService.register({
-        ...payload,
-        subscriptionPackageId: selectedPackage?._id
-      });
+      const resp = await authService.register(payload);
       if (selectedPackage && resp.data) {
         window.location.href = resp.data.paymentUrl;
       }
@@ -156,7 +127,7 @@ class FanRegister extends PureComponent<IProps> {
   render() {
     const { ui, acceptanceSignup } = this.props;
     const {
-      step, packages, submiting, fetching, selectedPackage, showModal
+      step, packages, submiting, fetching, selectedPackage
     } = this.state;
 
     return (
@@ -304,19 +275,12 @@ class FanRegister extends PureComponent<IProps> {
             </div>
           </div>
         </div>
-        <PaymentMethodSelect
-          onSelect={this.onPaymentSelect.bind(this)}
-          onCancel={this.onCancel.bind(this)}
-          showModal={showModal}
-        />
       </Layout>
     );
   }
 }
 const mapStatesToProps = (state: any) => ({
-  ui: { ...state.ui },
-  ccbillEnabled: state.settings.ccbillEnable,
-  curoEnabled: state.settings.curoEnabled
+  ui: { ...state.ui }
 });
 
 const mapDispatchToProps = {};

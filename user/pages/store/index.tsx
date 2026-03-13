@@ -90,10 +90,6 @@ class Products extends PureComponent<IProps, IStates> {
         text: 'All type'
       },
       {
-        key: 'physical',
-        text: 'Physical'
-      },
-      {
         key: 'digital',
         text: 'Digital'
       }

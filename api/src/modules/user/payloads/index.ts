@@ -1,5 +1,4 @@
 export * from './block-country.payload';
-export * from './update-free-access.payload';
 export * from './user-auth-create.payload';
 export * from './user-auth-update.payload';
 export * from './user-create.payload';

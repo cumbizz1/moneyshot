@@ -26,32 +26,37 @@ class Dashboard extends PureComponent<IProps> {
   static layout = 'blank';
 
   public static async getInitialProps() {
-    if (typeof window !== 'undefined') {
-      const confirmAdult = cookieService.checkCookie('confirm_adult');
-      if (confirmAdult) window.location.href = '/home';
-    }
-
     const store = storeHolder.getStore();
     const { settings } = store.getState() as any;
     if (!settings.welcomePageId) return {};
 
-    const resp = await postService.findById(settings.welcomePageId);
-    return {
-      welcome: {
-        content: resp.data?.content,
-        title: resp.data?.title,
-        image: resp.data?.image
-      }
-    };
+    try {
+      const resp = await postService.findById(settings.welcomePageId);
+      return {
+        welcome: {
+          content: resp.data?.content,
+          title: resp.data?.title,
+          image: resp.data?.image
+        }
+      };
+    } catch {
+      return {
+        welcome: {
+          content: '',
+          title: '',
+          image: null
+        }
+      };
+    }
   }
 
-  componentDidMount() {
-    const confirmAdult = cookieService.checkCookie('confirm_adult');
-    confirmAdult && Router.replace('/home');
-  }
+  // componentDidMount() {
+  //   const confirmAdult = cookieService.checkCookie('confirm_adult');
+  //   confirmAdult && Router.replace('/home');
+  // }
 
   confirm18 = () => {
-    cookieService.setCookie('confirm_adult', 'true', 365);
+    cookieService.setCookie('confirm_adult', 'true', 24);
     Router.replace('/home');
   };
 

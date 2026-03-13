@@ -14,7 +14,6 @@ import { AdminPerformerGalleryController } from './controllers/admin-gallery.con
 import { AdminPerformerPhotoController } from './controllers/admin-photo.controller';
 import { AdminProductsController } from './controllers/admin-product.controller';
 import { AdminPerformerVideosController } from './controllers/admin-video.controller';
-import { FreeVideoAccessController } from './controllers/free-video-access.controller';
 import { UserGalleryController } from './controllers/user-gallery.controller';
 import { UserPhotosController } from './controllers/user-photo.controller';
 import { UserProductsController } from './controllers/user-product.controller';
@@ -65,8 +64,7 @@ import { VideoSearchService } from './services/video-search.service';
     UserVideosController,
     UserPhotosController,
     UserProductsController,
-    UserGalleryController,
-    FreeVideoAccessController
+    UserGalleryController
   ],
   exports: [
     ...assetsProviders,

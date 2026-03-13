@@ -121,7 +121,7 @@ export class SubscriptionService {
 
     if (!item) return false;
 
-    if (['verotel', 'ccbill', 'curo'].includes(item.paymentGateway) && moment(item.expiredAt).endOf('day').isAfter(new Date())) {
+    if (['verotel', 'ccbill'].includes(item.paymentGateway) && moment(item.expiredAt).endOf('day').isAfter(new Date())) {
       return true;
     }
 

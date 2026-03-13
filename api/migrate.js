@@ -53,8 +53,7 @@ migrate.load({
   // Set class as custom stateStore
   stateStore: new MongoDbStore(),
   // do not filter lib folder, load only js file
-  filterFunction: (fileName) => fileName.includes('.js') && !fileName.includes('lib/'),
-  ignoreMissing: true
+  filterFunction: (fileName) => fileName.includes('.js') && !fileName.includes('lib/')
 }, async function next(err, set) {
   if (err) {
     throw err
@@ -62,7 +61,7 @@ migrate.load({
 
   // connect mongoose in the boot then other scripts can use
   await mongoose.connect(process.env.MONGO_URI, {
-    useNewUrlParser: true,
+    useNewUrlParser: true, 
     useUnifiedTopology: true
   });
 

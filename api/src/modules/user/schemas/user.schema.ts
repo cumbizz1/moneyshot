@@ -64,10 +64,6 @@ export const userSchema = new mongoose.Schema({
   offlineAt: {
     type: Date
   },
-  hasFreeVideoAccess: {
-    type: Boolean,
-    default: false
-  },
   createdAt: {
     type: Date,
     default: Date.now

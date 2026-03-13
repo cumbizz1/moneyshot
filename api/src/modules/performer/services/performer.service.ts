@@ -204,6 +204,8 @@ export class PerformerService {
       data.username = data.username.trim();
     }
 
+    data.dateOfBirth = payload.dateOfBirth ? payload.dateOfBirth : performer.dateOfBirth;
+
     if (
       (payload.avatarId && !performer.avatarId)
       || (performer.avatarId

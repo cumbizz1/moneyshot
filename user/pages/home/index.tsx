@@ -2,7 +2,7 @@
 import './index.module.less';
 
 import { Banner } from '@components/common';
-// import { HomePerformers } from '@components/performer';
+import { HomePerformers } from '@components/performer';
 import { HomeListVideo } from '@components/video/home-list';
 import { IBanner, IUIConfig } from '@interfaces/index';
 import storeHolder from '@lib/storeHolder';
@@ -34,10 +34,15 @@ class HomePage extends PureComponent<IProps> {
   static async getInitialProps() {
     const store = storeHolder.getStore();
     const { settings } = store.getState() as any;
-    const [homeContent, banners] = await Promise.all([
-      settings?.homeContentPageId && postService.findById(settings?.homeContentPageId),
-      bannerService.search({ limit: 99 })
-    ]);
+    let homeContent = null;
+    let banners = null;
+    if (settings?.homeContentPageId) {
+      try {
+        homeContent = await postService.findById(settings?.homeContentPageId);
+        banners = await bannerService.search({ limit: 99 });
+      // eslint-disable-next-line no-empty
+      } catch {}
+    }
     return {
       homeContent: {
         content: homeContent?.data?.content,
@@ -127,10 +132,10 @@ class HomePage extends PureComponent<IProps> {
               {bottomBanners && bottomBanners.length > 0 && (
                 <Banner banners={bottomBanners} arrows autoplay autoplaySpeed={(settings?.bannerAutoplaySpeed || 5) * 1000} />
               )}
-              {/* <h3 className="page-heading">
+              <h3 className="page-heading">
                 <span className="box">MODELS</span>
               </h3>
-              <HomePerformers performers={performers} loading={fetching} /> */}
+              <HomePerformers performers={performers} loading={fetching} />
             </div>
           </div>
         </div>

@@ -1,5 +1,5 @@
 export const HEIGHTS = [
-  { value: '', text: 'N/A' },
+  { value: '', text: 'All heights' },
   { value: 'under_140', text: 'Under 140cm' },
   { value: '140_142', text: '140cm to 142cm' },
   { value: '143_145', text: '143cm to 145cm' },
@@ -22,7 +22,7 @@ export const HEIGHTS = [
 ];
 
 export const WEIGHTS = [
-  { value: '', text: 'N/A' },
+  { value: '', text: 'All weights' },
   { value: 'under_40', text: 'Under 40kg' },
   { value: '40_42', text: '40kg to 42kg' },
   { value: '43_45', text: '43kg to 45kg' },
@@ -48,9 +48,8 @@ export const WEIGHTS = [
 ];
 
 export const AGES = [
-  { value: '', text: 'N/A' },
-  { value: 'under_16', text: 'Under 16' },
-  { value: '17_19', text: '17 to 19' },
+  { value: '', text: 'All ages' },
+  { value: '18_19', text: '18 to 19' },
   { value: '20_22', text: '20 to 22' },
   { value: '23_25', text: '23 to 25' },
   { value: '26_28', text: '26 to 28' },
@@ -65,7 +64,7 @@ export const AGES = [
 ];
 
 export const BODY_TYPES = [
-  { value: '', text: 'N/A' },
+  { value: '', text: 'All body types' },
   { value: 'slim', text: 'Slim' },
   { value: 'petite', text: 'Petite' },
   { value: 'curvy', text: 'Curvy' },
@@ -78,7 +77,7 @@ export const BODY_TYPES = [
 ];
 
 export const ETHNICITIES = [
-  { value: '', text: 'N/A' },
+  { value: '', text: 'All ethnicities' },
   { value: 'asian', text: 'Asian' },
   { value: 'white', text: 'White' },
   { value: 'hispanicOrLatino', text: 'Hispanic or Latino' },
@@ -88,7 +87,7 @@ export const ETHNICITIES = [
 ];
 
 export const BUTTS = [
-  { value: '', text: 'N/A' },
+  { value: '', text: 'All butt sizes' },
   { value: 'x-large', text: 'X-Large' },
   { value: 'large', text: 'Large' },
   { value: 'medium', text: 'Medium' },
@@ -96,14 +95,14 @@ export const BUTTS = [
 ];
 
 export const PUBIC_HAIRS = [
-  { value: '', text: 'N/A' },
+  { value: '', text: 'All pubic hairs' },
   { value: 'trimmed', text: 'Trimmed' },
   { value: 'shaved', text: 'Shaved' },
   { value: 'hairy', text: 'Hairy' }
 ];
 
 export const HAIRS = [
-  { value: '', text: 'N/A' },
+  { value: '', text: 'All hair colors' },
   { value: 'yellow', text: 'Yellow' },
   { value: 'blond', text: 'Blond' },
   { value: 'black', text: 'Black' },
@@ -113,7 +112,7 @@ export const HAIRS = [
 ];
 
 export const EYES = [
-  { value: '', text: 'N/A' },
+  { value: '', text: 'All eye colors' },
   { value: 'blue', text: 'Blue' },
   { value: 'brown', text: 'Brown' },
   { value: 'green', text: 'Green' },
@@ -124,14 +123,14 @@ export const EYES = [
 ];
 
 export const GENDERS = [
-  { value: '', text: 'N/A' },
+  { value: '', text: 'All genders' },
   { value: 'male', text: 'Male' },
   { value: 'female', text: 'Female' },
   { value: 'transgender', text: 'Trans' }
 ];
 
 export const SEXUAL_ORIENTATIONS = [
-  { value: '', text: 'N/A' },
+  { value: '', text: 'All sexual orienrations' },
   { value: 'heterosexual', text: 'Heterosexual' },
   { value: 'homosexual', text: 'Homosexual' },
   { value: 'bisexual', text: 'Bisexual' }

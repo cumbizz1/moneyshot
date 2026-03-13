@@ -143,4 +143,9 @@ export class PerformerUpdatePayload {
   @IsString()
   @IsOptional()
     sexualOrientation: string;
+
+  @ApiProperty()
+  @IsString()
+  @IsOptional()
+    dateOfBirth: string;
 }

@@ -40,9 +40,7 @@ class Footer extends PureComponent<IProps, any> {
         <div className="main-container">
           {!currentUser._id && (
             <ul key="auth-links">
-              <li
-                className={router.pathname === '/auth/register' ? 'active' : ''}
-              >
+              <li className={router.pathname === '/auth/register' ? 'active' : ''}>
                 <Link href={{ pathname: '/auth/register' }} as="/auth/register">
                   <a>Sign up</a>
                 </Link>
@@ -56,47 +54,28 @@ class Footer extends PureComponent<IProps, any> {
           )}
           <ul key="menus">
             {menus?.map((item) => (
-              <li
-                key={item._id}
-                className={router.pathname === item.path ? 'active' : ''}
-              >
-                <a
-                  rel="noreferrer"
-                  href={item.path}
-                  target={item.isNewTab ? '_blank' : ''}
-                >
+              <li key={item._id} className={router.pathname === item.path ? 'active' : ''}>
+                <a rel="noreferrer" href={item.path} target={item.isNewTab ? '_blank' : ''}>
                   {item.title}
                 </a>
               </li>
             ))}
           </ul>
           {/* eslint-disable-next-line react/no-danger */}
-          {ui.footerContent ? (
-            <div
-              key="footer-content"
-              className="footer-content"
-              dangerouslySetInnerHTML={{ __html: ui.footerContent }}
-            />
-          ) : (
-            <div className="copyright-text">
-              <span>
-                <Link href="/home">
-                  <a>{ui?.siteName}</a>
-                </Link>{' '}
-                © Copyright {new Date().getFullYear()}
-              </span>
-            </div>
-          )}
-          <div className={style['footer-images']}>
-            {[1, 2, 3, 4, 5, 6, 7, 8].map((num) => (
-              <img
-                key={`footer-image-${num}`}
-                src={`/Schermafbeelding-${num}.png`}
-                alt={`Footer ${num}`}
-                className={style['footer-image']}
-              />
-            ))}
-          </div>
+          {ui.footerContent ? <div key="footer-content" className="footer-content" dangerouslySetInnerHTML={{ __html: ui.footerContent }} />
+            : (
+              <div className="copyright-text">
+                <span>
+                  <Link href="/home">
+                    <a>{ui?.siteName}</a>
+                  </Link>
+                  {' '}
+                  © Copyright
+                  {' '}
+                  {new Date().getFullYear()}
+                </span>
+              </div>
+            )}
         </div>
       </div>
     );

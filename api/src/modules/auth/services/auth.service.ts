@@ -64,7 +64,7 @@ export class AuthService {
     const newVal = this.encryptPassword(data.value, salt);
     let auth = await this.authModel.findOne({
       type: data.type,
-      source: data.source,
+      // source: data.source,
       sourceId: data.sourceId
     });
     if (!auth) {
@@ -88,6 +88,9 @@ export class AuthService {
     if (!user) {
       throw new EntityNotFoundException();
     }
+    await this.authModel.deleteMany({
+      sourceId: user._id
+    });
     await Promise.all([
       user.email && this.create({
         source: data.source,

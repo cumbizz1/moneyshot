@@ -2,14 +2,12 @@ import {
   CodeOutlined,
   EnvironmentOutlined, PhoneOutlined, TagOutlined
 } from '@ant-design/icons';
-import CuroMethodSelect from '@components/payment/curo-method-select';
 import { ICoupon } from '@interfaces/payment';
 import { IProduct } from '@interfaces/product';
 import {
-  Button, Col, Form, Input, Radio, Row, Space
+  Button, Col, Form, Input, Row, Space
 } from 'antd';
 import { PureComponent } from 'react';
-import { connect } from 'react-redux';
 
 import style from './from-card.module.less';
 
@@ -27,8 +25,6 @@ interface IProps {
   onApplyCoupon: Function;
   currencySymbol: string;
   currency: string;
-  curoEnabled: boolean;
-  ccbillEnabled: boolean;
 }
 
 const calTotal = (items, couponValue?: number) => {
@@ -43,41 +39,23 @@ const calTotal = (items, couponValue?: number) => {
   return total.toFixed(2) || 0;
 };
 
-class CheckOutForm extends PureComponent<IProps, any> {
-  constructor(props) {
-    super(props);
-
-    const { ccbillEnabled, curoEnabled } = props;
-    let paymentGateway = '';
-    if (ccbillEnabled) paymentGateway = 'ccbill';
-    else if (curoEnabled) paymentGateway = 'curo';
-    this.state = {
-      couponCode: '',
-      curoMethod: 'creditcard',
-      paymentGateway
-    };
-  }
+export class CheckOutForm extends PureComponent<IProps> {
+  state = {
+    couponCode: ''
+  };
 
   render() {
     const {
-      onFinish, submiting, products, coupon, isApplyCoupon, onApplyCoupon, currencySymbol, currency,
-      curoEnabled,
-      ccbillEnabled
+      onFinish, submiting, products, coupon, isApplyCoupon, onApplyCoupon, currencySymbol, currency
     } = this.props;
-    const { couponCode, paymentGateway, curoMethod } = this.state;
+    const { couponCode } = this.state;
     let valid = true;
     products.forEach((p) => { if (p.type === 'physical') valid = false; });
     return (
       <Form
         {...layout}
         name="nest-messages"
-        onFinish={(values) => {
-          onFinish({
-            ...values,
-            paymentGateway,
-            curoMethod
-          })
-        }}
+        onFinish={onFinish.bind(this)}
         initialValues={{
           deliveryAddress: '',
           phoneNumber: '',
@@ -176,27 +154,6 @@ class CheckOutForm extends PureComponent<IProps, any> {
             </Form.Item>
           </Col>
           <Col span={24}>
-            <Radio.Group onChange={(e) => this.setState({ paymentGateway: e.target.value })} value={paymentGateway}>
-              {ccbillEnabled && (
-                <Radio value="ccbill">
-                  <img alt="CCBill" src="/ccbill-ico.png" style={{width: '50px', height: 'auto'}} />
-                </Radio>
-              )}
-              {curoEnabled && (
-                <Radio value="curo">
-                  <img alt="CURO" src="/curo-icon.jpg" style={{width: '50px', height: 'auto'}} />
-                </Radio>
-              )}
-            </Radio.Group>
-            {paymentGateway === 'curo' && <>
-              <hr />
-              <CuroMethodSelect
-                method={curoMethod}
-                onChange={(method) => this.setState({ curoMethod: method })}
-              />
-            </>}
-          </Col>
-          <Col span={24}>
             <strong style={{ fontSize: '20px' }}>
               Total price
               {' '}
@@ -252,12 +209,3 @@ class CheckOutForm extends PureComponent<IProps, any> {
     );
   }
 }
-
-const mapStates = (state: any) => {
-  return {
-    ccbillEnabled: state.settings.ccbillEnable,
-    curoEnabled: state.settings.curoEnabled
-  };
-};
-
-export default connect(mapStates)(CheckOutForm);
