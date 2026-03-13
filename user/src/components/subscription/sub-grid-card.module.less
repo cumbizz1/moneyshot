@@ -1,0 +1,84 @@
+@import '../../../style/vars.less';
+
+.pk-card {
+  border: 1px solid @primary-color;
+  position: relative;
+  text-align: center;
+  border-radius: 5px;
+  overflow: hidden;
+
+  :global .ant-card-body {
+    padding: 0;
+    position: relative;
+
+    .pk-top {
+      .pk-name {
+        color: @white;
+        background-color: @primary-color;
+        text-transform: capitalize;
+        padding: 10px;
+        width: 100%;
+        z-index: 9;
+        font-weight: bold;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+        overflow: hidden;
+        text-align: center;
+        position: relative;
+        margin: 0;
+      }
+
+      .pk-price {
+        text-align: center;
+        padding: 10px;
+        font-size: 20px;
+        font-weight: 600;
+        color: @primary-color;
+        background-color: @light-blue;
+
+        .sub-price {
+          font-size: 14px;
+        }
+      }
+    }
+
+    .recurring-text {
+      padding: 5px 0;
+      margin: 0;
+      background-color: @light-blue;
+    }
+
+    .pk-description {
+      margin-bottom: 5px;
+      height: 150px;
+      overflow: auto;
+    }
+
+    .pk-btn {
+      background-color: @light-blue;
+
+      .ant-btn {
+        background-color: @primary-color;
+        color: @white;
+        height: 40px;
+        width: 100%;
+        font-weight: 600;
+        border: none;
+        border-radius: 0;
+      }
+    }
+  }
+
+  &:hover,
+  &.active {
+    border: 1px solid @theme-color;
+
+    .ant-card-body {
+      .pk-btn {
+        .ant-btn {
+          background-color: @secondary-color;
+        }
+      }
+    }
+  }
+}

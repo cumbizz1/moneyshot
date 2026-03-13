@@ -1,0 +1,107 @@
+@import '../../../style/vars.less';
+
+.grid-card {
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.05);
+  position: relative;
+  transition: all 0.3s ease-in-out;
+  height: 200px;
+  background-repeat: no-repeat;
+  background-size: 100%;
+  background-position: center;
+  margin-bottom: 40px;
+  border-top-left-radius: 2px;
+  border-top-right-radius: 2px;
+
+  :global .card-stat {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    padding: 5px 2px;
+    color: @white;
+    font-size: 12px;
+    position: absolute;
+    bottom: 0;
+    background-image: linear-gradient(to bottom, #9a9a9a00 0%, #292929 100%);
+  }
+
+  :global .model-name {
+    color: @white;
+    background-color: @primary-color;
+    padding: 10px;
+    text-align: center;
+    font-weight: 600;
+    text-transform: capitalize;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
+    font-family: @primary-font-bold;
+    position: absolute;
+    width: 100%;
+    top: 100%;
+    border-bottom-left-radius: 2px;
+    border-bottom-right-radius: 2px;
+  }
+
+  &:hover {
+    background-size: 102%;
+
+    :global .model-name {
+      background-color: @theme-color;
+    }
+  }
+}
+
+@media screen and (max-width: @tablet-screen) {
+  height: 200px;
+
+  .grid-card {
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.05);
+    position: relative;
+    transition: all 0.3s ease-in-out;
+    height: 200px;
+    background-repeat: no-repeat;
+    background-size: 100%;
+    background-position: center;
+    margin-bottom: 40px;
+    border-top-left-radius: 2px;
+    border-top-right-radius: 2px;
+
+    :global .card-stat {
+      width: 100%;
+      display: flex;
+      justify-content: space-between;
+      padding: 5px 2px;
+      color: @white;
+      font-size: 12px;
+      position: absolute;
+      bottom: 0;
+      background-image: linear-gradient(to bottom, #9a9a9a00 0%, #292929 100%);
+    }
+
+    :global .model-name {
+      color: @white;
+      background-color: @primary-color;
+      padding: 10px;
+      text-align: center;
+      font-weight: 600;
+      text-transform: capitalize;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      overflow: hidden;
+      font-family: @primary-font-bold;
+      position: absolute;
+      width: 100%;
+      top: 100%;
+      border-bottom-left-radius: 2px;
+      border-bottom-right-radius: 2px;
+    }
+
+    &:hover {
+      background-size: 102%;
+
+      :global .model-name {
+        background-color: @theme-color;
+      }
+    }
+  }
+}

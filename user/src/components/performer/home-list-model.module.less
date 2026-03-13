@@ -1,0 +1,26 @@
+@import '../../../style/vars.less';
+
+.models {
+  :global .show-all {
+    padding: 0 5px;
+    margin: 15px 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    a {
+      padding: 10px 25px;
+      font-size: 16px;
+      color: @primary-color;
+      border: 2px solid;
+      border-radius: 5px;
+      transition: all 0.3s ease-in-out;
+      font-family: @primary-font-bold;
+
+      &:hover {
+        background-color: @secondary-color;
+        color: @white;
+      }
+    }
+  }
+}

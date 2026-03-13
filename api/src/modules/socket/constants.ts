@@ -1,0 +1,5 @@
+export const USER_SOCKET_CONNECTED_CHANNEL = 'USER_SOCKET_CONNECTED_CHANNEL';
+export const USER_SOCKET_EVENT = {
+  CONNECTED: 'connected',
+  DISCONNECTED: 'disconnected'
+};

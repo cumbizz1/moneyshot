@@ -1,0 +1,52 @@
+@import '../node_modules/antd/dist/antd.less';
+@import './vars.less';
+@import './default.less';
+@import './global.less';
+@import './responsive.less';
+
+html {
+  scroll-behavior: smooth;
+}
+
+// ::-webkit-scrollbar-thumb {
+//   background-color: #999;
+// }
+
+// ::-webkit-scrollbar {
+//   width: 8px;
+//   height: 8px;
+// }
+
+body {
+  background-color: @main-background-color;
+  color: @text-color;
+  font-size: 13px;
+  font-family: 'Merriweather Sans', 'Roboto', sans-serif !important;
+}
+
+button {
+  &:hover {
+    opacity: 0.8;
+  }
+
+  background: @orange-color;
+}
+
+li {
+  list-style: none;
+}
+
+a {
+  text-decoration: none;
+
+  &:hover {
+    opacity: 0.8;
+  }
+}
+
+.flex-row-space-between {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+}
